@@ -1,0 +1,82 @@
+/*-------------------------
+    Slick 
+-------------------------*/
+.slick-slider {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    user-select: none;
+    touch-action: pan-y;
+
+    .slick-list {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        padding: 0;
+        transform: translate3d(0, 0, 0);
+    }
+    .slick-track {
+        transform: translate3d(0, 0, 0);
+        position: relative;
+        top: 0;
+        left: 0;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+    .slick-slide {
+        display: none;
+        float: left;
+        height: 100%;
+        min-height: 1px;
+    }
+}
+
+.slick-initialized .slick-slide {
+    display: block;
+}
+
+
+.slick-list {
+    margin: 0 -55px;
+   
+    .slick-slide {
+        padding: 0 15px;
+    }
+}
+
+.slick-dotted.slick-slider {
+    margin-bottom: 0;
+}
+
+// Slick Dotted Style
+
+.slick-dot-nav {
+    .slick-dots {
+        bottom: 0;
+        // text-align: left;
+        margin: 0 -10px;
+        li {
+            margin: 0 15px;
+            height: 8px;
+            width: 8px;
+            button {
+                border: none;
+                background-color: rgba(54,151,254,0.32) ;
+                border-radius: 50%;
+                height: 8px;
+                width: 8px;
+                transition: var(--transition);
+                &::before {
+                    display: none;
+                }
+            }
+            &.slick-active {
+                button {
+                    background-color: var(--color-primary);
+                }
+            }
+        }
+    }
+}

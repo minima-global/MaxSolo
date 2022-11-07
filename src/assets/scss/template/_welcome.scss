@@ -1,0 +1,291 @@
+/*-------------------------
+    Welcome MaxSolo
+-------------------------*/
+
+.welcome-maxsolo {
+    background-color: var(--color-white);
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @media #{$sm-layout} {
+        margin-top: 0;
+        align-items: center;
+    }
+    .banner-content {
+        text-align: center;
+        width: 100%;
+        .title {
+            font-size: 1.2rem;
+            line-height: 1.4;
+            font-weight: 700;
+            margin-top: -20px;
+            letter-spacing: -0.045em;
+            color: var(--color-minima-dark);
+            @media #{$smlg-device} {
+                font-size: 22px;
+            }
+            @media #{$md-layout} {
+                font-size: 22px;
+            }
+            @media #{$sm-layout} {
+                font-size: 22px;
+            }
+            span {
+                color: var(--color-minima-dark);
+            }
+        }
+    }
+    .maxsolo-logotype{
+        display: flex;
+        position: absolute;
+        width: 54px;
+        height: 54px;
+        top: 2%;
+        left: 5%;
+    }
+    .maxsolo-slider {
+        width: 380px;
+        height:430px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        overflow: hidden;
+        @media #{$sm-layout} {
+            height:430px;
+        }
+        .slick-slide {
+            transform: scale(0.85);
+            margin: 0 0 100px;
+            transition: var(--transition);
+            @media #{$md-layout} {
+                margin: 0 0 100px;
+            } 
+            @media #{$sm-layout} {
+                margin: 0 0 60px;
+            }
+            a {
+                border-radius: 30px;
+                box-shadow: 0 60px 86px -30px rgba(153,159,174, .4);
+                img {
+                    border-radius: 30px;
+                }
+            }
+            &.slick-active.slick-center {
+                transform: scale(1);
+            }
+        }
+        .slick-slider .slick-list {
+            width: 440px;
+            height: 430px;
+        }
+        .slick-dots {
+            list-style: none;
+            text-align: center;
+            bottom: 25px;
+            left: -14px;
+            position: relative;
+            li {
+                display: inline-block;
+                button {
+                    font-size: 0;
+                    padding: 0;
+                }
+            }
+
+        }
+    }
+}
+
+.welcome-button{
+    display: flex;
+    margin: auto auto 20px auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.welcome-logo{
+    background: var(--gradient-minima);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+
+    touch-action: none;
+    -webkit-overflow-scrolling: none;
+    overflow: hidden;
+    overscroll-behavior: none;
+
+    &-symbol{    
+        svg{ 
+            width: 128px;
+            height: 128px;
+            .svg-symbol {
+            animation: animate-symbol-stroke 2s cubic-bezier(0.47, 0, 0.745, 0.715) 0s both,
+                         animate-symbol-fill 0.7s cubic-bezier(0.95, 0.05, 0.795, 0.035) 0.8s both;
+            }
+        }
+    }
+    &-minima{
+        position: absolute;
+        bottom: 40px;
+        img{
+            width: 128px;
+            animation: 3s ease 0s normal forwards 1 fadein;
+        }
+    }
+}
+
+.how-it-works{
+    display: flex;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    color: var(--color-black);
+    z-index: 5;
+    background:rgb(255, 255, 255);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .maxsolo-logotype{
+        display: flex;
+        position: absolute;
+        width: 54px;
+        height: 54px;
+        top: 2%;
+        left: 5%;
+    }
+    .close-window{
+        display: flex;
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        cursor: pointer;
+        svg{
+          width: 40px;
+          height: 40px;
+          color: var(--color-gray-2);
+        }
+    }
+    .section-heading{
+        max-width: 80%;
+        margin: 0 auto;
+        max-height: 80%;
+        display: flex;
+        flex-direction: column;
+        .title{
+            font-weight: 700;
+            font-size: 28px;
+            color: #16181C;
+        }
+        .subtitle{
+            color: var(--color-black);
+        }
+        p{
+            width: 100%;
+            text-align: left;
+            font-size: 16px;
+            color: #363A3F;
+            line-height: 30px;
+            word-break: break-all;
+            ul{
+                font-weight: 700;
+            }
+        }
+        .small-copy{
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 24px;
+            color: #363A3F;
+            width: 100%;
+            text-align: center;
+        }
+    }
+}
+
+// Animation for MaxSolo welcome screen
+
+ @keyframes animate-symbol-stroke {
+    0% {
+      stroke-dashoffset: 2848.293701171875px;
+      stroke-dasharray: 2848.293701171875px;
+    }
+  
+    100% {
+      stroke-dashoffset: 0;
+      stroke-dasharray: 2848.293701171875px;
+    }
+  }
+  
+  @keyframes animate-symbol-fill {
+    0% {
+      fill: transparent;
+    }
+  
+    100% {
+      fill: rgb(255, 255, 255);
+    }
+  }
+
+  @keyframes fadein{
+    0% { opacity:0; }
+    66% { opacity:0; }
+    100% { opacity:1; }
+}
+  
+@keyframes shine {
+    100% {
+        left: 125%;
+    }
+}
+
+.welcome-contacts{
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    background: var(--send-window);
+    border-radius: 6px;
+    padding: 40px 10px;
+    justify-content: center;
+    align-items: center;
+    &-body{
+        &-icon{
+            width: 100px;
+            display: flex;
+
+        }
+        &-header{
+            color: var(--color-body-header);
+            display: flex;
+            font-size: 22px;
+            text-align: center;
+            margin: 1rem auto;
+            font-weight: 700;
+            line-height: 32px;
+        }
+        &-copy{
+            display: flex;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 26px;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--color-body-copy);
+
+        }
+    }
+}
