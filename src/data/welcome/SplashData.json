@@ -1,0 +1,22 @@
+[
+    [
+        {
+            "id": 1,
+            "width_img": "/images/welcome/maxsolo_slide_1.svg",
+            "title": "Send messages and share files using the decentralised Minima network",
+            "style": "blue"
+        },
+        {
+            "id": 2,
+            "width_img": "/images/welcome/maxsolo_slide_2.svg",
+            "title": "Send Minima tokens and NFTs with your contacts through any chat",
+            "style": "blue"
+        },
+        {
+            "id": 3,
+            "width_img": "/images/welcome/maxsolo_slide_3.svg",
+            "title": "Shape the future, Every chat helps make the Minima network secure",
+            "style": "blue"
+        }
+    ]
+]
