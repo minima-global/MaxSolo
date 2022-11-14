@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "e2e/e2e.test.js"  ]
 }
