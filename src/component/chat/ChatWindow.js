@@ -32,7 +32,7 @@ const ChatWindow = () => {
     window.MDS.cmd("maxcontacts",function(result){  
       //Get contacts  
       console.log("Get contacts", result.response.contacts);
-      setContacts(result.response.contacts);
+      setContacts([...result.response.contacts]);
       setIsChatLoading(true);
 
       window.MDS.sql("SELECT * from messages WHERE ID in "
@@ -89,6 +89,7 @@ const ChatWindow = () => {
 
     window.MDS.cmd("balance",function(result){
       setGetBalance(result.response);
+      // console.log(result.response);
     });
     
   }, []);
@@ -97,21 +98,22 @@ const ChatWindow = () => {
     setTimeout(function() {
       console.log("Contacts restarted")
       getContacts();
-    }, 3500);
+    }, 5000);
   }
 
   events.onMaxima((maximaMessage) => {
     console.log("Listener", maximaMessage);
     let pubkey = maximaMessage.from;
+    
     if(pubkey === publicRoomKey){
       loadMessages(publicRoomKey);
-    }else{
-      // console.log("Rooms")
     }
-    if(maximaMessage.error){
-      // console.log(maximaMessage.error);
-    }
+
     loadLastMessage();
+
+    if(contacts.length !== lastMessage.length){
+      restartContacts();
+    }
   });
 
   const getPublicKey = (roomkey, roomname) =>{

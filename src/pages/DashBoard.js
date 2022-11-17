@@ -40,7 +40,7 @@ const DashBoard = () => {
     useEffect(()=>{
         setTimeout(function() {
             setShowLogo(false)
-        }, 2500);
+        }, 3000);
 
     },[])
 
@@ -48,7 +48,7 @@ const DashBoard = () => {
         return (
             <>
             <div className='section-heading welcome-button'>
-                <button onClick={WelcomeHandler} className="minima-btn btn-fill-blue-medium">Start chatting</button>
+                <button data-testid="start-chat-button" onClick={WelcomeHandler} className="minima-btn btn-fill-blue-medium">Start chatting</button>
                 <button onClick={HowItWorks} className="minima-btn btn-fill-black-medium">How it works</button>
             </div>
             {howItWorks ?
@@ -58,21 +58,18 @@ const DashBoard = () => {
                     </div>      
                     <div className="section-heading heading-left">
                         <h2 className="title">How it works</h2>
-                        <p>
+                        <div>
                         Experience freedom of information<br /><br />
                         MaxSolo is an encrypted, peer-to-peer messaging application, which uses Minima’s information transfer layer, Maxima.<br /><br />
                         <ul>
-                        <li>Send messages and images</li>
-                        <li>Transfer coins, tokens and NFTs</li>
-                        <li>Custom tokens and NFTs</li>
-                        <li>Experience freedom of information</li>
+                            <li>Send messages and images</li>
+                            <li>Transfer Minima, tokens and NFTs</li>
+                            <li>Experience freedom of information</li>
                         </ul>
-                        For help setting up your contacts head to the Help section on the app or head to the docs website.
-                        </p>
+                        </div>
                         <div className='section-heading welcome-button'>
                             <button onClick={WelcomeHandler} className="minima-btn btn-fill-blue-medium">Start chatting</button>
                         </div>
-                        <div className='small-copy'> For instructions on how to set up your Maxima Contacts, please see the Help section of the Android app or visit the <a href="https://docs.minima.global/docs/runanode/usingmaxima" target="_blank" rel="noopener noreferrer">docs website</a>.</div>
                     </div>
                  </div>
 
@@ -85,9 +82,9 @@ const DashBoard = () => {
         <>
         <SEO title="MaxSolo"/>
         <main className='app'>
-            { isAppFirstLaunched && showLogo ? <WelcomeLogo />  : ""} 
+            { isAppFirstLaunched && showLogo ? <WelcomeLogo />  : null} 
             { isAppFirstLaunched && showWelcome ? <WelcomeMaxSolo /> : <ChatWindow /> } 
-            { isAppFirstLaunched && showWelcome ? <WelcomeButton />: ""} 
+            { isAppFirstLaunched && showWelcome ? <WelcomeButton />: null} 
         </main>        
         </>
     )

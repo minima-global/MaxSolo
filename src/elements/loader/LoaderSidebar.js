@@ -1,12 +1,8 @@
 import React from 'react';
 import ChatIcon from '../../assets/images/maxsolo_chat_icon.svg';
-import { openInNewTab } from './../../utils';
 
 const LoaderSidebar = ({welcomeAddContact}) => {
 
-    // const onClickLink = () => {
-    //     openInNewTab('https://docs.minima.global/docs/runanode/usingmaxima');
-    //  }
     return (
         <>
             <div className='welcome-contacts'>

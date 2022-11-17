@@ -130,7 +130,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
           //Is it pending..
           if(resp.pending){
             // alert("This transaction is now pending!");
-            tokenSendData('Transaction pending of ');
+            tokenSendData('Transaction pending of');
             setTimeout(function() {
               setShowPending(true);
               setShowSendTokenBut(false);
@@ -143,7 +143,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
         }
         if(resp.status == true){
           // alert("Transaction successful!");
-          tokenSendData('I just sent you ');
+          tokenSendData('I just sent you');
           setTimeout(function() {
             setShowSuccess(true);
             setShowSendTokenBut(false);
@@ -179,7 +179,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
   }
   
   const tokenHandler = (name, id) => {
-    console.log(name, id)
+    // console.log(name, id)
     setActive(name);
     setTokenTitle(name);
     setTokenID(id);
@@ -189,7 +189,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
     //Delete messages from Room
     window.MDS.sql("DELETE from messages WHERE publickey='"+publicRoomKey+"'", function(sqlmsg){      
       if(sqlmsg.status){
-        // notifyRef.current.notifyMessage("Messages in chat deleted.", "info");
+        notifyRef.current.notifyMessage("Messages in chat deleted.", "info");
         loadMessages();
         restartContacts();
       }
@@ -265,10 +265,12 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
                       {getBalance.map(((item, index)=>(
                         <div className={`send-tokens-window-balance-item ${active === tokenName(item.token.name) && 'active'}`} key={index} onClick={() => tokenHandler(tokenName(item.token.name), item.tokenid, item.sendable)}>
                           <div className='token-logotype'><img src={tokenUrl(item.token.url)} alt="" /></div>
-                          <div className='token-name'>
-                            {tokenName(item.token.name)}
+                          <div className='token-details'>
+                            <div className='token-name'>{tokenName(item.token.name)}</div>
+                            <div className='token-balance'>{item.token.ticker}</div>
+                            <div className='token-balance'>{item.sendable}</div>
+                            
                           </div>
-                          <div className='token-balance'>{item.sendable}</div>
                         </div>
                       )))}
                     </div>
@@ -296,7 +298,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
                           </label>
                         </div>
                   </div>
-                  <form onSubmit={submitHandle}>
+                  <form data-testid="form-submit" onSubmit={submitHandle}>
                     {baseImage ? <img src={baseImage} height="32px" width="32px" alt="" /> : "" }
                     <svg onClick={onMenuClick} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     <input id="file-input" type="file" accept="image/*"
@@ -304,9 +306,10 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
                         uploadImage(e);
                       }}
                       style={{display: 'none'}}
+                      onClick={e => (e.target.value = null)}
                     />
-                    <input onChange={(e) => {setMessageData(e.target.value)} } type="text" placeholder="Write a message" value={messageData} />
-                    <svg onClick={submitHandle} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                    <input data-testid="input-text" onChange={(e) => {setMessageData(e.target.value)} } type="text" placeholder="Write a message" value={messageData} />
+                    <svg className='form-send' onClick={submitHandle} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg>
                   </form>
                 </div>
           </div>

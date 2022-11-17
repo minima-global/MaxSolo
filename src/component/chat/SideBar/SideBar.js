@@ -38,6 +38,7 @@ import NotificationSidebar from '../../../elements/notification/NotificationSide
 
   const addContact = (e) => {
     e.preventDefault();
+
     if(contactData===""){
       notifyRef.current.notifyMessage("Please submit contact.", "error");
       return;
@@ -78,6 +79,26 @@ import NotificationSidebar from '../../../elements/notification/NotificationSide
     });
   }
 
+  const deleteContact = (id, currentaddress, publickey) => {
+    console.log("Contact deleted" + id + currentaddress);
+    const deletecontact = "maxcontacts action:remove contact:"+currentaddress+" id:"+id+"";
+    window.MDS.cmd(deletecontact, function(resp) {
+      if (resp.status) {
+        notifyRef.current.notifyMessage("Contact deleted.", "info");
+        window.MDS.sql("DELETE from messages WHERE publickey='"+publickey+"'", function(sqlmsg){      
+          if(sqlmsg.status){
+            notifyRef.current.notifyMessage("Contact & messages deleted.", "info");
+            setSelectedTab(0);
+            restartContacts();
+          }
+        }); 
+      }
+      else{
+        notifyRef.current.notifyMessage("Could not delete contact.", "error");
+      }
+    });
+  }
+
   const copyToClipboard = (e) => {
     e.preventDefault();
     navigator.clipboard.writeText(responseContact);
@@ -89,14 +110,14 @@ import NotificationSidebar from '../../../elements/notification/NotificationSide
   };
   
   const onClickTab = id => () => {
-    setSelectedTab(id);
+    isSelectedTab === id ? setSelectedTab(0) : setSelectedTab(id);
   }
 
   const welcomeAddContact = id => () => {
     setSelectedTab(id);
     setIsOpen(!isOpen);
   }
-
+  
   return (
     <>
           <div className={`maxsolo-sidebar-back ${mobile ? '' : 'hide'}`} onClick={MobileHandler}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg></div>
@@ -131,6 +152,25 @@ import NotificationSidebar from '../../../elements/notification/NotificationSide
                             <button className="minima-btn btn-fill-blue-medium">Add contact</button>
                         </div>
                       </form>
+                  </div>
+                </li>
+                <li className='maxsolo-sidebar-menu-item'>
+                  <div onClick={onClickTab(2)} className = {`maxsolo-sidebar-menu-item-tab ${isSelectedTab === 2 ? 'active' : ''}`}>
+                    <FaUserSlash/> Delete Contact
+                  </div>
+                  <div className={`maxsolo-sidebar-menu-item-container ${isSelectedTab === 2 ? 'activebig' : ''}`} >
+                    {contacts.map(((item)=>(
+                          <div key={item.id} className='contact-list-item'>
+                            <Avatar name={item.extradata.name} size={18} round={true} maxInitials={2}/>
+                            <div className='contact-list-item-name'>{item.extradata.name}</div>
+                            <div className='contact-list-item-but-del' onClick={() => deleteContact(item.id, item.currentaddress, item.publickey)}>
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/>
+                              </svg>
+                            </div>
+                          </div>
+                        ))
+                    )}
                   </div>
                 </li>
                 <li className='maxsolo-sidebar-menu-item'>

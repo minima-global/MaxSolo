@@ -58,7 +58,7 @@ const tokenUrl = (item) => {
   if (item === undefined) {
     return MinimaSign; 
   }else{
-    return item;
+    return item.replace('<artimage>','data:image/jpeg;base64,').replace('</artimage>','');
   }
 }
 
