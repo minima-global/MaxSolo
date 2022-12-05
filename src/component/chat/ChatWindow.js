@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback } from 'react';
-import { utf8ToHex, getTime } from '../../utils';
+import { utf8ToHex, getTime, showNotification } from '../../utils';
 import { events } from "./../../minima/libs/events";
 import WelcomeLoader from '../../elements/loader/WelcomeLoader';
 import SideBar from './SideBar/SideBar';
@@ -114,6 +114,12 @@ const ChatWindow = () => {
     if(contacts.length !== lastMessage.length){
       restartContacts();
     }
+
+    if(maximaMessage.type=="text"){
+      showNotification(maximaMessage.username, maximaMessage.message);	
+    }else{
+      showNotification(maximaMessage.username, "IMAGE");
+    }
   });
 
   const getPublicKey = (roomkey, roomname) =>{
@@ -211,6 +217,31 @@ const ChatWindow = () => {
   useEffect(()=>{
     getContacts();
   },[getContacts]);
+
+  // Detecting App is hidden or not, for sending notifications.
+
+  useEffect(() => {
+    setInterval(() => {
+      if(document.hidden) {
+        window.MDS.comms.solo(JSON.stringify({ target: "service", keepAlive: false }));
+      }else{
+        window.MDS.comms.solo(JSON.stringify({ target: "service", keepAlive: true }));
+      }
+    }, 30000);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleTabClosing)
+    return () => {
+        window.removeEventListener('beforeunload', handleTabClosing)
+    }
+  })
+
+  const handleTabClosing = () => {
+    window.MDS.comms.solo(JSON.stringify({ target: "service", keepAlive: true }));
+  }
+
+
  
     return (
 		<>

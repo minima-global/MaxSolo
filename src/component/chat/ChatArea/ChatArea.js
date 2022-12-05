@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { getTime, tokenName, tokenUrl } from '../../../utils';
+import { getTime, tokenName, tokenUrl, linkOutput } from '../../../utils';
 import {Decimal} from 'decimal.js';
 import Resizer from "react-image-file-resizer";
 import Avatar from 'react-avatar';
@@ -18,6 +18,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
   const [tokenID, setTokenID] = useState('0x00');
   const [tokenTitle, setTokenTitle] = useState('Minima');
   const [tokenAmount, setTokenAmount] = useState(0);
+  const [tokenSendable, setTokenSendable] = useState(0);
   const inputToken = useRef(null);
   const [showToken, setShowToken] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -84,6 +85,12 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
     const tokenid = tokenID;
     const tokenamount = inputToken.current.value;
     const tokenname = tokenTitle;
+
+
+    if(tokenamount > tokenSendable){      
+      alert("Insufficient funds...");
+      return;
+    }
 
     if(tokenamount == "" || tokenamount < 0 || tokenamount == 0 ){
       alert("Invalid amount...");
@@ -178,8 +185,9 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
     }
   }
   
-  const tokenHandler = (name, id) => {
+  const tokenHandler = (name, id, sendable) => {
     // console.log(name, id)
+    setTokenSendable(sendable);
     setActive(name);
     setTokenTitle(name);
     setTokenID(id);
@@ -196,7 +204,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
     }); 
   }
 
-  const getMaximaContact =()=>{
+  const getMaximaContact = ( )=>{
     window.MDS.cmd("maxcontacts action:search publickey:"+publicRoomKey,function(resp){
       navigator.clipboard.writeText(resp.response.contact.currentaddress);
       notifyRef.current.notifyMessage("Contact copied.", "info");
@@ -244,7 +252,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
                           <LightBox src={item.FILEDATA} alt="MaxSolo">
                             <img src={item.FILEDATA} className="img-prev" alt="" />
                           </LightBox> : "" }
-                          <span>{item.MESSAGE === "Chat" ? null: decodeURIComponent(item.MESSAGE).replace("%27", "'") }</span>
+                          <span>{item.MESSAGE === "Chat" ? null: linkOutput(decodeURIComponent(item.MESSAGE).replace("%27", "'")) }</span>
                         </div>
                       </div>
                       </div>

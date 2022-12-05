@@ -215,7 +215,7 @@ import NotificationSidebar from '../../../elements/notification/NotificationSide
             ? (<>
                 <div className='maxsolo-sidebar-contacts'>
                 {lastMessage.map(((item, index)=>(
-                  <div className={`contact ${contacts.filter(data => data.publickey === item.PUBLICKEY).map(data => (data.samechain))} ${active === item.PUBLICKEY && 'active'}`} key={index} onClick={() => SideBarHandler(item.PUBLICKEY, item.ROOMNAME)}>
+                  <div className={`contact ${contacts.filter(data => data.publickey === item.PUBLICKEY).map(data => (Boolean((Math.abs(new Date() - data.lastseen))/60000 < 30)))} ${active === item.PUBLICKEY && 'active'}`} key={index} onClick={() => SideBarHandler(item.PUBLICKEY, item.ROOMNAME)}>
                     <Avatar className="contact-profile" name={item.ROOMNAME} size={54} round={true} maxInitials={2}/>
                     <div className="contact-detail">
                       <div className="contact-username">{item.ROOMNAME}</div><span className="contact-date">{contacts.filter(data => data.publickey === item.PUBLICKEY).map(filteredData => (getTime(filteredData.lastseen)))}</span>

@@ -86,5 +86,54 @@ const openInNewTab = (url) => {
   if (newWindow) newWindow.opener = null
 }
 
+function showNotification(from, message){
+	
+	window.MDS.log("NOTIFICATION : "+message+" permission:"+Notification.permission+" visibility:"+document.visibilityState);
+  console.log("NOTIFICATION : "+message+" permission:"+Notification.permission+" visibility:"+document.visibilityState);
+	
+	//Only show if we can''t see it..
+	if(document.visibilityState !== "visible") {
+	     
+		// If it's okay let's create a notification
+		if (Notification.permission === "granted") {
+	      const notification = new Notification(from,{
+			  body: message,
+			  icon: './minimalogo.png'
+			});
+	    }
+	}
+	
+}
 
-export {revealAnim, tokenName, tokenUrl, openInNewTab, hexToUtf8, utf8ToHex, getTime, ClickOutside};
+const RE_URL = /\w+:\/\/\S+/g;
+
+function linkOutput(str) {
+  let match;
+  const results = [];
+  let lastIndex = 0;
+  while (match = RE_URL.exec(str)) {
+    const link = match[0];
+    if (lastIndex !== match.index) {
+      const text = str.substring(lastIndex, match.index);
+      results.push(
+        <span key={results.length}>{text}</span>,
+      );
+    }
+    results.push(
+      <a key={results.length} href={link} target="_blank">{link}</a>
+    );
+    lastIndex = match.index + link.length;
+  }
+  if (results.length === 0) {
+    return str;
+  }
+  if (lastIndex !== str.length) {
+    results.push(
+      <span key={results.length}>{str.substring(lastIndex)}</span>,
+    );
+  }
+  return results;
+}
+
+
+export {revealAnim, tokenName, tokenUrl, openInNewTab, hexToUtf8, utf8ToHex, getTime, ClickOutside, linkOutput, showNotification};

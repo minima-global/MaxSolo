@@ -6,7 +6,7 @@
     display: flex;
     flex-direction: column;
     background-color: var(--theme-bg-color);
-    max-width: 1600px;
+    max-width: 1200px;
     margin: 0 auto;
     overflow: hidden;
     height: 100vh;  
@@ -167,7 +167,8 @@
                   font-weight: 700;
                   color: var(--color-unread-msg);
                   @media #{$lg-up-device} {
-                    color: var(--color-white);
+                    // color: var(--color-white);
+                    color: #888;
                   }
 
                 }
@@ -738,6 +739,10 @@
     // -moz-hyphens: auto;
     // -ms-hyphens: auto;
     // hyphens: auto;
+    a{
+      color: var(--chat-text-color);
+      text-decoration: underline;
+    }
    }
   }
   &-text {
@@ -758,7 +763,7 @@
  }
 
  #root > div > main > div > div.maxsolo-chat-area > div.maxsolo-chat-area-main > div:nth-last-child(3){
-  //  margin-bottom: 40px;
+   margin-bottom: 40px;
   //  display: inline-block;
  }
 
@@ -773,6 +778,11 @@
    background-color: var(--theme-color);
    color: #fff;
    border-radius: 6px 6px 0 6px;
+   span{
+    a{
+      color: #fff;
+    }
+   }
   }
   .chat-msg-date {
    left: auto;

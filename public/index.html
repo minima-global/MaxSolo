@@ -19,6 +19,12 @@
     </script>
     <% } %>
     <script defer src="%PUBLIC_URL%/mds.js"></script>
+    <script type="text/javascript">
+      //Ask for permission..
+      if (Notification.permission !== "granted") {
+        var permission = Notification.requestPermission();	
+      }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
