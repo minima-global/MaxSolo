@@ -13,6 +13,8 @@ const ChatWindow = () => {
   const [lastMessage, setLastMessage] = useState([]);
   const [getBalance, setGetBalance] = useState([]);
   const [getMinimaAddress, setGetMinimaAddress] = useState('');
+  const [getCurrentAddress, setGetCurrentAddress] = useState('');
+  const [getContactId, setGetContactId] = useState('');
   const [publicRoomKey, setPublicRoomKey] = useState('');
   const [roomName, setRoomName] = useState('');
   const [lastSeen, setLastSeen] = useState('');
@@ -131,13 +133,16 @@ const ChatWindow = () => {
 
     if(contacts.length > 0){
       let lastArr = [];
-      lastArr = contacts.filter(data => data.publickey === roomkey);   
+      lastArr = contacts.filter(data => data.publickey === roomkey); 
+
       setGetMinimaAddress(lastArr[0]?.extradata.minimaaddress);
       setLastSeen(getTime(lastArr[0]?.lastseen));
+      setGetCurrentAddress(lastArr[0]?.currentaddress);
+      setGetContactId(lastArr[0]?.id);
+      
     }
 
-    // console.log("Making message read 1", roomkey)
-    //Set all messages to read
+    // Set all messages to read
     window.MDS.sql("UPDATE messages SET READ=1 WHERE publickey='"+roomkey+"'");
     loadLastMessage(); 
   }
@@ -194,7 +199,6 @@ const ChatWindow = () => {
     //Load the last messages in each room..
     window.MDS.sql("SELECT * from messages WHERE publickey='"+key+"' ORDER BY ID DESC LIMIT 200", function(sqlmsg){
       // console.log(sqlmsg.status);
-      
       if(sqlmsg.status){
         setIsChatLoading(false);
         setChatData(sqlmsg.rows.reverse());
@@ -268,6 +272,8 @@ const ChatWindow = () => {
                 sendData={sendData} 
                 publicRoomKey={publicRoomKey} 
                 getMinimaAddress={getMinimaAddress} 
+                getCurrentAddress={getCurrentAddress}
+                getContactId={getContactId}
                 responseName={responseName}
                 restartContacts={restartContacts}
                 />

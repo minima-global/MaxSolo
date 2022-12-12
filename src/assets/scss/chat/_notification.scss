@@ -64,6 +64,16 @@ $p: 8px;
   &.info{
     background: var(--color-notification-info);
   }
+  &.info-sidebar{
+    margin-top: 1.875em;
+    background: var(--color-notification-info-sidebar);
+    height: 80px;
+    .maxsolo-sidebar-notification-content{
+      .copy{
+        text-align: left;
+      }
+    }
+  }
 }
 
 .maxsolo-chat-area-main{

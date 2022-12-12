@@ -1,0 +1,197 @@
+/*-------------------------
+    Modal Container
+-------------------------*/
+.maxsolo-modal{
+  &-container{
+    display: flex;
+    overflow: hidden;
+    background: var(--send-window);
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    position: absolute;
+    z-index: 11;
+    top: 0;
+    left: -100%;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.1s ease-in-out;
+    padding: 20px;
+
+    @media #{$lg-up-device} {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    &.active{
+      display: flex;
+      left: 0%;
+    }
+
+    &-button{
+      display: flex;
+      justify-content: left;
+      align-items: center;
+      flex-direction: row;
+      width: 100%;
+      // border: solid orange 2px;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--msg-username);
+      margin: 1.5rem 1rem auto 1rem;
+      cursor: pointer;
+      svg{
+        width: 20px;
+        height: 20px;
+        margin-right: 0.5rem;
+      }
+      @media #{$lg-up-device} {
+        display: none;
+      }
+    }
+    &-content{
+      .close-window{
+        display: none;
+        @media #{$lg-up-device} {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          display: block;
+          cursor: pointer;
+        }
+      }
+      display: flex;
+      font-size: 0.875rem;
+      flex: 1;
+      font-weight: 500;
+      flex-direction: column;
+      width: 100%;
+      letter-spacing: -0.025em;
+      color: var(--msg-username);
+      margin: 3rem auto 0 auto;
+      justify-content: center;
+      align-items: center;
+      padding-top: 4rem;
+      opacity: 1;
+      .userpick{
+        // border: 2px solid orange;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .maxsolo-chat-area-title-profile {
+          margin-right: 0px;
+        }
+      }
+      .main-title{
+        font-weight: 700;
+        font-size: 1.5rem;
+        // border: 2px solid orange;
+      }
+      .last-seen{
+        font-weight: 500;
+        font-size: 0.875rem;
+      }
+      .button{
+        display: flex;
+        width: 100%;
+        align-items: center;
+        flex-direction: column;
+        // border: solid orange 2px;
+        margin: auto 0 68px 0;
+      }
+      @media #{$lg-up-device} {
+        width: 560px;
+        height: 560px !important;
+        border-radius: 20px;
+        background: var(--send-window);
+        position: inherit;
+        &.hide{
+          opacity: 0;
+        }
+      }
+
+      // .info-message{
+      //   text-align: center;
+      //   margin: 1rem auto;
+      //   font-weight: 700;
+      //   color: var(--color-notification-info-sidebar-success);
+      // }
+      // .info-input{
+      //   text-align: center;
+      //   font-weight: 700;
+      //   color: red;
+      // }
+    }
+    &-confirm-delete{
+      z-index: 12;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      .overlay{
+        position: absolute;
+        top: 0px;
+        z-index: 12;
+        height: 100vh;
+        left: 0px;
+        opacity: 0;
+        transition: all 0.2s ease-in-out;
+        width: 100%;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.7);
+        pointer-events: none;
+        @media #{$large-mobile} {
+          width: 100%;
+          height: 100vh;
+        }
+        &.show{
+          opacity: 1;
+          left: 0px;
+          pointer-events: auto;
+        }
+      }
+      .content{
+        z-index: 12;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: var(--send-window);
+        border-radius: 20px 20px 0 0;
+        padding: 20px;
+        position: absolute;
+        bottom: -500px;
+        left: 0px;
+        opacity: 0;
+        transition: 0.2s all ease-in-out;
+        color: var(--msg-username);
+        .copy{
+          text-align: center;
+          margin: 2rem 0;
+          white-space: pre-line;
+        }
+        &.show{
+          bottom: 0px;
+          opacity: 1;
+          pointer-events: auto;
+        }
+        @media #{$lg-up-device} {
+          border-radius: 20px;
+          position: inherit;
+        }
+      }
+    }
+    .minima-btn{
+      width: 280px;
+      &.success{
+        background: var(--color-notification-info-sidebar-success);
+        color: var(--color-white);
+      }
+      @media #{$sm-layout} {
+        &:hover {
+          transform: scale(1);
+        }
+      }
+    }
+  }
+}

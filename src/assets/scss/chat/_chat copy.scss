@@ -93,16 +93,15 @@
             position: relative;
             background: var(--theme-bg-color);
             margin-bottom: 1px;
-            margin-top: 1px;
-            border-bottom: 1px solid var(--contacts-line);
             &:hover {
              background-color: var(--msg-hover-bg);
             }
             &.active {
             //  background: var(--active-conversation-bg);
-             background: var(--color-primary);
-            //  background: #363A3F;
+            //  background: var(--color-primary);
+             background: #363A3F;
              color: var(--color-white);
+            //  border-left: 4px solid var(--theme-color);
               @media #{$smlg-device} {
                 color: var(--msg-username);
                 background: var(--active-conversation-bg);
@@ -262,7 +261,6 @@
          flex-wrap: wrap;
          align-items: center;
          width: 80%;
-         cursor: pointer;
          .break{
           flex-basis: 100%;
           height: 0;
@@ -744,10 +742,6 @@
     a{
       color: var(--chat-text-color);
       text-decoration: underline;
-      transition: all 0.2s ease-in-out;
-      &:hover{
-        color:#888;
-      }
     }
    }
   }
@@ -787,10 +781,6 @@
    span{
     a{
       color: #fff;
-      transition: all 0.2s ease-in-out;
-      &:hover{
-        color: rgb(227, 227, 227);
-      }
     }
    }
   }
@@ -889,9 +879,8 @@
 
 .maxsolo-sidebar-menu{
   position: absolute;
-  display:flex; flex-direction:column; flex:1;
   top: 0px;
-  z-index: 4;
+  z-index: 2;
   padding: 120px 26px 0 22px;
   background: var(--theme-bg-color);
   height: 100vh;
@@ -900,7 +889,7 @@
   width: 339px;
   overflow: hidden;
   @media #{$large-mobile} {
-    width: 80%;
+    width: 100%;
     height: 100vh;
     padding: 80px 26px 0 22px;
   }
@@ -932,15 +921,12 @@
     &-details{
       margin: 0;
       padding: 0;
-      line-height: 1.4rem;
+      line-height: 1.6rem;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-weight: 700;
-      letter-spacing: -0.15px;
       span{
         font-size: 14px;
         font-weight: 500;
-        letter-spacing: -0.15px;
         transition: var(--transition);
         cursor: pointer;
         &:hover{
@@ -963,7 +949,7 @@
       cursor: pointer;
       font-weight: 700;
       letter-spacing: -0.5px;
-      font-size: 1rem;
+      font-size: 14px;
       margin: 16px 0px 16px 0px;
       z-index: 3;
       color: var(--msg-username);
@@ -988,16 +974,16 @@
       svg{
         // width: 18px;
         height: 20px;
-        font-size: 20px;
+        font-size: 15px;
         margin-right: 10px;
-        color: var(--msg-username);
+        color:rgba(192, 192, 192, 0.9)
       }
       &.my_switcher{
         button{
           font-weight: 700;
           color: var(--msg-username);
           svg{
-            color: var(--msg-username);
+            color:rgba(192, 192, 192, 0.9)
           }
           &:hover{
             // background: var(--color-minima-dark-grey);
@@ -1132,50 +1118,12 @@
       padding: 7px 20px;
     }
   }
-  &-buttons{
-    margin: auto 0 78px 0;
-    // display: flex;
-    flex-direction: column;
-    align-self: flex-end;
-    .minima-btn{
-      width: 100%;
-    }
-  }
 
  }
 
-.maxsolo-sidebar-overlay{
-  position: absolute;
-  top: 0px;
-  z-index: 3;
-  padding: 120px 26px 0 22px;
-  height: 100vh;
-  // left: -100%;
-  left: 0px;
-  opacity: 0;
-  transition: all 0.2s ease-in-out;
-  width: 339px;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.7);
-  pointer-events: none;
-  @media #{$large-mobile} {
-    width: 100%;
-    height: 100vh;
-    padding: 80px 26px 0 22px;
-  }
-  &.open{
-    opacity: 1;
-    left: 0px;
-    pointer-events: auto;
-  }
-}
-
  .header-menu{
   cursor: pointer;
-  margin-right: 10px;
-  width: 40px;
-  padding: 8px 8px 8px 0;
-  height: 40px;
+  margin-right: 20px;
  }
 
   $curve: cubic-bezier(0.650, 0.000, 0.450, 1.000);

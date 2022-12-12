@@ -16,7 +16,7 @@
     );
     --msg-hover-bg: rgba(47, 50, 56, 0.54);
     --chat-text-bg: #383b40;
-    --chat-text-color: #b5b7ba;
+    --chat-text-color: #a1a3a6;
     --msg-date: #626466;
     --msg-message: var(--msg-date);
     --msg-username: var(--color-white);
@@ -53,6 +53,7 @@
     --color-token-border-active: #363A3F;
     --color-unread-msg: #FFFFFF;
     --msg-username-active: #FFFFFF;
+    --contacts-line: rgba(255,255,255,0.1);
  
     body {
         color: var(--dark-body-text);

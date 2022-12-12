@@ -1,28 +1,24 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { getTime } from '../../../utils';
-import { FaAddressCard, FaShareAlt, FaUserAlt, FaUserSlash } from 'react-icons/fa';
+import { FaQuestionCircle } from 'react-icons/fa';
 import Avatar from 'react-avatar';
 import SwitcherHeader from '../../../elements/switcher/SwitcherHeader';
 import LoaderSidebar from '../../../elements/loader/LoaderSidebar';
-import NotificationSidebar from '../../../elements/notification/NotificationSidebar';
+import EditProfile from '../../../elements/interface/EditProfile';
+import AddContact from '../../../elements/interface/AddContact';
 
 
   const SideBar = ({ getPublicKey, contacts, lastMessage, restartContacts, responseContact, responseName }) => {
 
   const [active, setActive] = useState(null);
   const [mobile, setMobile] = useState(false);
-  const [contactData, setContactData] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isSelectedTab, setSelectedTab] = useState(0);
-  const [buttonCopyText, setButtonCopyText] = useState('Copy');
-
-  const setProfileRef = useRef(null);
-  const notifyRef = useRef(null);
+  const [infoCopyText, setInfoCopyText] = useState('Share profile');
   
 	const toggleIsOpen = () => {
 		setIsOpen(!isOpen);
     setSelectedTab(0);
-    setContactData("");
 	};
 
   const SideBarHandler = (key, name) => {
@@ -35,79 +31,6 @@ import NotificationSidebar from '../../../elements/notification/NotificationSide
   const MobileHandler = () => {
     setMobile(false);
   }
-
-  const addContact = (e) => {
-    e.preventDefault();
-
-    if(contactData===""){
-      notifyRef.current.notifyMessage("Please submit contact.", "error");
-      return;
-    }
-
-    const addcontact = "maxcontacts action:add contact:"+contactData+"";
-    window.MDS.cmd(addcontact, function(resp) {
-      if (resp.response.maxima.delivered) {
-        notifyRef.current.notifyMessage("Contact created.", "info");
-        setContactData("");
-        restartContacts();
-      }
-      else{
-        notifyRef.current.notifyMessage("Could not create contact.", "error");
-      }
-    });
-  }
-
-  const setProfile = (e) => {
-    e.preventDefault();
-
-    if(setProfileRef.current.value===""){
-      notifyRef.current.notifyMessage("Please submit profile name.", "error");
-      return;
-    }
-  
-    const setprofile = "maxima action:setname name:"+setProfileRef.current.value+"";
-    window.MDS.cmd(setprofile, function(resp) {
-      console.log(resp)
-      if (resp.status) {
-        notifyRef.current.notifyMessage("Profile name updated.", "info");
-        setProfileRef.current.value="";
-        restartContacts();
-      }
-      else{
-        notifyRef.current.notifyMessage("Could not update name.", "error");
-      }
-    });
-  }
-
-  const deleteContact = (id, currentaddress, publickey) => {
-    console.log("Contact deleted" + id + currentaddress);
-    const deletecontact = "maxcontacts action:remove contact:"+currentaddress+" id:"+id+"";
-    window.MDS.cmd(deletecontact, function(resp) {
-      if (resp.status) {
-        notifyRef.current.notifyMessage("Contact deleted.", "info");
-        window.MDS.sql("DELETE from messages WHERE publickey='"+publickey+"'", function(sqlmsg){      
-          if(sqlmsg.status){
-            notifyRef.current.notifyMessage("Contact & messages deleted.", "info");
-            setSelectedTab(0);
-            restartContacts();
-          }
-        }); 
-      }
-      else{
-        notifyRef.current.notifyMessage("Could not delete contact.", "error");
-      }
-    });
-  }
-
-  const copyToClipboard = (e) => {
-    e.preventDefault();
-    navigator.clipboard.writeText(responseContact);
-    setButtonCopyText("Copied!");
-    notifyRef.current.notifyMessage("Your Maxima contact copied.", "info");
-    setTimeout(() => {
-      setButtonCopyText("Copy");
-    }, 1000); 
-  };
   
   const onClickTab = id => () => {
     isSelectedTab === id ? setSelectedTab(0) : setSelectedTab(id);
@@ -115,8 +38,21 @@ import NotificationSidebar from '../../../elements/notification/NotificationSide
 
   const welcomeAddContact = id => () => {
     setSelectedTab(id);
-    setIsOpen(!isOpen);
+    // setIsOpen(!isOpen);
   }
+
+  const onCloseClick = () => {
+    setIsOpen(false);
+  }
+
+  const copyToClipboard = (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(responseContact);
+    setInfoCopyText('Copied to clipboard!');
+    setTimeout(() => {
+      setInfoCopyText('Share profile');
+    }, 3000); 
+  };
   
   return (
     <>
@@ -128,88 +64,39 @@ import NotificationSidebar from '../../../elements/notification/NotificationSide
                 <div className="header-title">MaxSolo</div>
               </div>
             </div>
+
+            <EditProfile setSelectedTab={setSelectedTab} responseName={responseName} responseContact={responseContact} isSelectedTab={isSelectedTab} restartContacts={restartContacts}/>
+            <AddContact setSelectedTab={setSelectedTab} setIsOpen={setIsOpen} isSelectedTab={isSelectedTab} restartContacts={restartContacts}/>
+            
             <div className={`maxsolo-sidebar-menu ${isOpen ? 'open' : ''}`}>
-              <NotificationSidebar ref={notifyRef} />
-              <div className='maxsolo-sidebar-menu-name'>
+
+              <div className='close-window' onClick={onCloseClick}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </div>
+
+              <div className='maxsolo-sidebar-menu-name' onClick={onClickTab(1)}>
                 <Avatar name={responseName} size={64} round={true} maxInitials={2}/> 
                 <div className='maxsolo-sidebar-menu-name-details'>
                   {responseName}<br/>
-                  <span onClick={onClickTab(3)}>Edit profile information</span>
+                  <span>Edit profile</span>
                 </div>
               </div>
               <ul>
-                <li className='maxsolo-sidebar-menu-item'>
-                  <div onClick={onClickTab(1)} className = {`maxsolo-sidebar-menu-item-tab ${isSelectedTab === 1 ? 'active' : ''}`}>
-                    <FaAddressCard /> Add contact
-                  </div>
-                  <div className={`maxsolo-sidebar-menu-item-container ${isSelectedTab === 1 ? 'active' : ''}`} >
-                      <div className='maxsolo-sidebar-menu-header'>
-                        <span>Enter a Maxima Contact address into the field below to add a new contact to MaxSolo.</span>
-                      </div>
-                      <form onSubmit={addContact}>
-                        <textarea onChange={(e) => {setContactData(e.target.value)} } type="text" placeholder="" value={contactData} />
-                        <div className='contact-form-button'>
-                            <button className="minima-btn btn-fill-blue-medium">Add contact</button>
-                        </div>
-                      </form>
-                  </div>
-                </li>
-                <li className='maxsolo-sidebar-menu-item'>
-                  <div onClick={onClickTab(2)} className = {`maxsolo-sidebar-menu-item-tab ${isSelectedTab === 2 ? 'active' : ''}`}>
-                    <FaUserSlash/> Delete Contact
-                  </div>
-                  <div className={`maxsolo-sidebar-menu-item-container ${isSelectedTab === 2 ? 'activebig' : ''}`} >
-                    {contacts.map(((item)=>(
-                          <div key={item.id} className='contact-list-item'>
-                            <Avatar name={item.extradata.name} size={18} round={true} maxInitials={2}/>
-                            <div className='contact-list-item-name'>{item.extradata.name}</div>
-                            <div className='contact-list-item-but-del' onClick={() => deleteContact(item.id, item.currentaddress, item.publickey)}>
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                                <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/>
-                              </svg>
-                            </div>
-                          </div>
-                        ))
-                    )}
-                  </div>
-                </li>
-                <li className='maxsolo-sidebar-menu-item'>
-                  <div onClick={onClickTab(3)} className = {`maxsolo-sidebar-menu-item-tab ${isSelectedTab === 3 ? 'active' : ''}`}>
-                    <FaUserAlt /> Set profile
-                  </div>
-                  <div className={`maxsolo-sidebar-menu-item-container ${isSelectedTab === 3 ? 'active' : ''}`} >
-                      <div className='maxsolo-sidebar-menu-header'>
-                        <span>Set your profile name in Contacts</span>
-                      </div>
-                      <form onSubmit={setProfile}>
-                        <textarea type="text" placeholder="" ref={setProfileRef} />
-                        <div className='contact-form-button'>
-                            <button className="minima-btn btn-fill-blue-medium">Set name</button>
-                        </div>
-                      </form>
-                  </div>
-                </li>
-                <li className='maxsolo-sidebar-menu-item'>
-                  <div onClick={onClickTab(4)} className = {`maxsolo-sidebar-menu-item-tab ${isSelectedTab === 4 ? 'active' : ''}`}>
-                    <FaShareAlt /> Share profile
-                  </div>
-                  <div className={`maxsolo-sidebar-menu-item-container ${isSelectedTab === 4 ? 'active' : ''}`} >
-                      <div className='maxsolo-sidebar-menu-header'>
-                        <span>{responseName} Maxima address</span>
-                      </div>
-                      <form>
-                        <textarea type="text" readOnly defaultValue={responseContact} />
-                        <div className='contact-form-button'>
-                            <button onClick={copyToClipboard} className="minima-btn btn-fill-blue-medium">{buttonCopyText}</button>
-                        </div>
-                      </form>
-                  </div>
-                </li>
-                <li onClick={onClickTab(5)} className = {`maxsolo-sidebar-menu-item-tab my_switcher header-options ${isSelectedTab === 5 ? 'active' : ''}`}>
+                <li className = {`maxsolo-sidebar-menu-item-tab my_switcher header-options`}>
                   <SwitcherHeader />
                 </li>
+                <li className='maxsolo-sidebar-menu-item'>
+                  <div onClick={(e) => { e.preventDefault(); window.open("https://docs.minima.global/docs/learn/maxima/maximafaq#what-is-maxsolo", "_blank");}} className = {`maxsolo-sidebar-menu-item-tab`}>
+                    <FaQuestionCircle /> Help
+                  </div>
+                </li>
               </ul>
+              <div className='maxsolo-sidebar-menu-buttons'>
+                <button onClick={onClickTab(2)} className="minima-btn btn-fill-blue-medium">Add contact</button>  
+                <button onClick={copyToClipboard} className={`minima-btn btn-outlined-blue ${infoCopyText === "Copied to clipboard!" ? 'copied' : ''}`}>{infoCopyText}</button>    
+              </div>
             </div>
+            <div onClick={toggleIsOpen} className={`maxsolo-sidebar-overlay ${isOpen ? 'open' : ''}`}></div>
 
             {contacts.length > 0
             ? (<>

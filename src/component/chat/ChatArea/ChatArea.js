@@ -9,8 +9,10 @@ import ScrollBottom from "../../../elements/scroll/ScrollBottom";
 import LightBox from '../../../elements/lightbox/Lightbox';
 import DropDown from '../../../elements/dropdown/DropDown';
 import NotificationSidebar from '../../../elements/notification/NotificationSidebar';
+import UserProfile from '../../../elements/modalbox/UserProfile';
 
-const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, publicRoomKey, chatData, sendData, responseName, roomName, lastSeen}) => {
+
+const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress, getContactId, getMinimaAddress, publicRoomKey, chatData, sendData, responseName, roomName, lastSeen}) => {
 
   const [messageData, setMessageData] = useState("");
   const [baseImage, setBaseImage] = useState("");
@@ -20,11 +22,14 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
   const [tokenAmount, setTokenAmount] = useState(0);
   const [tokenSendable, setTokenSendable] = useState(0);
   const inputToken = useRef(null);
+
   const [showToken, setShowToken] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showSendTokenBut, setShowSendTokenBut] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showPending, setShowPending] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
+
   const notifyRef = useRef(null);
   const imageMimeType = /image\/(png|jpg|jpeg|webp)/i;
 
@@ -195,13 +200,30 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
 
   const deleteMessages = () =>{  
     //Delete messages from Room
+    console.log("Messages Deleted");
     window.MDS.sql("DELETE from messages WHERE publickey='"+publicRoomKey+"'", function(sqlmsg){      
       if(sqlmsg.status){
-        notifyRef.current.notifyMessage("Messages in chat deleted.", "info");
         loadMessages();
         restartContacts();
+        notifyRef.current.notifyMessage("Messages in chat deleted.", "info");
       }
     }); 
+  }
+
+  const deleteContact = () => {
+    console.log("Contact deleted" + getContactId + getCurrentAddress);
+    const deletecontact = "maxcontacts action:remove contact:"+getCurrentAddress+" id:"+getContactId+"";
+    window.MDS.cmd(deletecontact, function(resp) {
+      if (resp.status) {
+        deleteMessages();
+        setTimeout(() => {
+          notifyRef.current.notifyMessage("Contact removed.", "info");
+        }, 1000); 
+      }
+      else{
+        notifyRef.current.notifyMessage("Could not remove contact.", "error");
+      }
+    });
   }
 
   const getMaximaContact = ( )=>{
@@ -211,11 +233,16 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
     });
   }
 
+  const handleUserProfileClick = event => {
+    setShowUserProfile(!showUserProfile)
+  };
+
+
   return (
     <>
           <div className="maxsolo-chat-area">
             <div className="maxsolo-chat-area-header">
-              <div className="maxsolo-chat-area-title">
+              <div className="maxsolo-chat-area-title" onClick={handleUserProfileClick}>
                 <Avatar className="maxsolo-chat-area-title-profile" name={roomName} size={54} round={true} maxInitials={2}/>
                 <div className="maxsolo-chat-area-title-room">
                   {roomName} 
@@ -226,6 +253,9 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getMinimaAddress, 
                 <DropDown deleteMessages={deleteMessages} getMaximaContact={getMaximaContact} roomName={roomName} />
               </div>
             </div>
+
+            <UserProfile deleteContact={deleteContact} roomName={roomName} lastSeen={lastSeen} deleteMessages={deleteMessages} publicRoomKey={publicRoomKey} showUserProfile={showUserProfile} setShowUserProfile={setShowUserProfile} />
+
             <div className="maxsolo-chat-area-main">
                 <div className='maxsolo-chat-area-main-notification'>
                   <div>
