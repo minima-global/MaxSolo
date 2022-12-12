@@ -325,6 +325,7 @@
           left: 0;
           margin: auto auto 0 auto;
           border-radius: 6px;
+          overflow: hidden;
           
           @media #{$smlg-device} {
             border-radius: 0px;
@@ -385,12 +386,14 @@
         }
         .chat-area-footer-menu{
           background: var(--theme-bg-color);
-          height: 100px;
-          padding: 5px;
-          flex-direction: column;
-          transition: all 0.4s ease-in-out;
-          position: sticky;
-
+          width: 280px;
+          height: 0px;
+          padding: 14px;
+          opacity: 0;
+          bottom: 90px;
+          position: absolute;
+          transition: all 0.2s ease-in-out;
+          overflow: hidden;
           .close-menu{
             display: flex;
             position: absolute;
@@ -420,8 +423,11 @@
               margin-right: 0.5rem;
             }
           }
-          &.hide{
-            display: none;
+          &.show{
+            height: 100px;
+            padding: 14px;
+            border-radius: 6px;
+            opacity: 1;
           }
         }
         .send-tokens-window{

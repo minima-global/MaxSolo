@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { ClickOutside } from '../../utils';
 
-const DropDown = ({ deleteMessages, getMaximaContact, roomName }) => {
+const FooterMenu = ({ deleteMessages, getMaximaContact, roomName }) => {
 
   const showMenu = useRef(null)
   let [open, setOpen] = useState(false);
@@ -33,4 +33,4 @@ const DropDown = ({ deleteMessages, getMaximaContact, roomName }) => {
   );
 };
 
-export default DropDown;
+export default FooterMenu;
