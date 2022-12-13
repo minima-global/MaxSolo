@@ -17,8 +17,8 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
 
   const [messageData, setMessageData] = useState("");
   const [baseImage, setBaseImage] = useState("");
-  const [active, setActive] = useState('Minima');
-  const [tokenID, setTokenID] = useState('0x00');
+  const [active, setActive] = useState('');
+  const [tokenID, setTokenID] = useState('');
   const [tokenTitle, setTokenTitle] = useState('Minima');
   const [tokenAmount, setTokenAmount] = useState(0);
   const [tokenSendable, setTokenSendable] = useState(0);
@@ -47,6 +47,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
 
   const onMenuClick = () => {   
     setShowMenu(!showMenu);
+    setActive('');
   };
 
   // Uploading and resizing image
@@ -297,24 +298,23 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
                     <div className='close-window' onClick={onButtonClick}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </div>
-                    <div className='send-tokens-window-header'>Enter amount</div>
-                    <div className='send-tokens-window-number'>
+                    <div className='send-tokens-window-header'>{active ? 'Enter amount' : 'Select token'}</div>
+                    <div className={`send-tokens-window-number ${active ? "" : "hide"}`}>
                       <input ref={inputToken} onChange={(event) => event.target.value < 0 ? event.target.value = 0 : event.target.value} placeholder="0" type="number" pattern="\d*" min="0" />
                     </div>
                     <div className='send-tokens-window-balance'>
                       {getBalance.map(((item, index)=>(
-                        <div className={`send-tokens-window-balance-item ${active === tokenName(item.token.name) && 'active'}`} key={index} onClick={() => tokenHandler(tokenName(item.token.name), item.tokenid, item.sendable)}>
+                        <div className={`send-tokens-window-balance-item ${active ? active === tokenName(item.token.name) && 'active' : ''}`} key={index} onClick={() => tokenHandler(tokenName(item.token.name), item.tokenid, item.sendable)}>
                           <div className='token-logotype'><img src={tokenUrl(item.token.url)} alt="" /></div>
                           <div className='token-details'>
                             <div className='token-name'>{tokenName(item.token.name)}</div>
                             <div className='token-balance'>{item.token.ticker}</div>
                             <div className='token-balance'>{item.sendable}</div>
-                            
                           </div>
                         </div>
                       )))}
                     </div>
-                    <button onClick={submitToken} disabled={showSendTokenBut} className="minima-btn btn-fill-blue-medium">Send</button>
+                    <button onClick={submitToken} disabled={showSendTokenBut} className={`minima-btn btn-fill-blue-medium ${active ? "" : "hide"}`}>Send</button>
                     <button onClick={onButtonClick} className="minima-btn btn-fill-black-medium">Cancel</button>
 
                     <ShowPending showPending={showPending} tokenAmount={tokenAmount} tokenTitle={tokenTitle} onButtonClick={onButtonClick} />
@@ -322,10 +322,9 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
 
                 </div>
 
+                <div className={`chat-area-footer-overlay ${showMenu ? "show" : ""}`}></div>
+
                 <div className={`chat-area-footer-menu ${showMenu ? "show" : ""}`}>
-                    {/* <div className='close-menu' onClick={onMenuClick}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </div> */}
                     <div className='chat-area-footer-menu-item' onClick={onButtonClick}>
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 20V4M17 4L20 7M17 4L14 7" stroke="#91919D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M7 4V20M7 20L10 17M7 20L4 17" stroke="#91919D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                       Send tokens
