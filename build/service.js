@@ -13,15 +13,29 @@ function hexToUtf8(s)
   );
 }
 
+
+var isOpened = true;
 //Main message handler..
 MDS.init(function(msg){
+
+	if (msg.event === "MDSCOMMS") {
+    const parsedPayload = JSON.parse(msg.data.message);
+    if(parsedPayload.target === "service" && !parsedPayload.keepAlive) {
+			isOpened = false;
+			// MDS.notify("MaxSolo is hidden " + isOpened);
+    }else{
+			isOpened = true;
+			// MDS.notify("MaxSolo is visible " + isOpened);
+			// MDS.notifycancel();
+		}
+  }
 	
 	//Do initialisation
 	if(msg.event == "inited"){
 		
 		//Create the DB if not exists
 		initsql = "CREATE TABLE IF NOT EXISTS `messages` ( "
-					+"  `id` IDENTITY PRIMARY KEY, "
+					+"  `id` bigint auto_increment, "
 					+"  `roomname` varchar(160) NOT NULL, "
 					+"  `publickey` varchar(512) NOT NULL, "
 					+"  `username` varchar(160) NOT NULL, "
@@ -66,7 +80,12 @@ MDS.init(function(msg){
 					+"('"+maxjson.username+"','"+pubkey+"','"+maxjson.username+"','"+maxjson.type+"','"+encoded+"','"+maxjson.filedata+"', "+Date.now()+")";
 	
 			//Insert into DB
-			MDS.sql(msgsql);				
+			MDS.sql(msgsql);
+
+			if(!isOpened){
+				MDS.notify(maxjson.username + '\n' + maxjson.message);
+			}
 		}
 	}
 });
+

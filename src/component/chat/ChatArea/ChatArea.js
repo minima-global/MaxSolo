@@ -10,7 +10,6 @@ import LightBox from '../../../elements/lightbox/Lightbox';
 import DropDown from '../../../elements/dropdown/DropDown';
 import NotificationSidebar from '../../../elements/notification/NotificationSidebar';
 import UserProfile from '../../../elements/modalbox/UserProfile';
-import FooterMenu from '../../../elements/dropdown/FooterMenu';
 
 
 const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress, getContactId, getMinimaAddress, publicRoomKey, chatData, sendData, responseName, roomName, lastSeen}) => {
@@ -31,6 +30,8 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
   const [showPending, setShowPending] = useState(false);
   const [showUserProfile, setShowUserProfile] = useState(false);
 
+  const [errorText, setErrorText] = useState('');
+
   const notifyRef = useRef(null);
   const imageMimeType = /image\/(png|jpg|jpeg|webp)/i;
 
@@ -48,6 +49,10 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
   const onMenuClick = () => {   
     setShowMenu(!showMenu);
     setActive('');
+  };
+
+  const onMaxAmountClick = () => {   
+    inputToken.current.value = tokenSendable;
   };
 
   // Uploading and resizing image
@@ -83,8 +88,16 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
     );
   });
 
+  const tokenHandler = (name, id, sendable) => {
+    // console.log(name, id)
+    setTokenSendable(sendable);
+    setActive(name);
+    setTokenTitle(name);
+    setTokenID(id);
+  }
+
   const submitToken = (e) => {
-    // console.log("Submit token", showSuccess)
+    // console.log("Submit token", tokenSendable)
     e.preventDefault();
 
     Decimal.set({ precision: 60 });
@@ -93,21 +106,14 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
     const tokenamount = inputToken.current.value;
     const tokenname = tokenTitle;
 
-
-    if(tokenamount > tokenSendable){      
-      alert("Insufficient funds...");
-      return;
-    }
-
     if(tokenamount == "" || tokenamount < 0 || tokenamount == 0 ){
       alert("Invalid amount...");
-      // notifyRef.current.notifyMessage("Invalid amount...", "error");
+      // setErrorText("Invalid amount...")
       return;
     }
 
     if(tokenid == ""){
       alert("Please select token...");
-      // notifyRef.current.notifyMessage("Please select token...", "error");
       return;
     }
 
@@ -119,12 +125,17 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
     const tokenamountsend = new Decimal(inputToken.current.value);
     // console.log("Amount"+roundedAmount);
 
+    if(tokenamount > tokenSendable){      
+      alert("Insufficient funds...");
+      // setErrorText("Insufficient funds...");
+      return;
+    }
+
     window.MDS.cmd("maxcontacts action:search publickey:"+publicRoomKey,function(resp){
 		    
       //Get the contact      
       const sendfunction = "send tokenid:"+tokenid+" amount:"+tokenamountsend+" address:"+getMinimaAddress;
       
-    
       window.MDS.cmd(sendfunction, function(resp){
         
         console.log("Token", resp);
@@ -192,16 +203,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
     }
   }
   
-  const tokenHandler = (name, id, sendable) => {
-    // console.log(name, id)
-    setTokenSendable(sendable);
-    setActive(name);
-    setTokenTitle(name);
-    setTokenID(id);
-  }
-
   const deleteMessages = () =>{  
-    //Delete messages from Room
     console.log("Messages Deleted");
     window.MDS.sql("DELETE from messages WHERE publickey='"+publicRoomKey+"'", function(sqlmsg){      
       if(sqlmsg.status){
@@ -228,7 +230,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
     });
   }
 
-  const getMaximaContact = ( )=>{
+  const getMaximaContact = ( ) => {
     window.MDS.cmd("maxcontacts action:search publickey:"+publicRoomKey,function(resp){
       navigator.clipboard.writeText(resp.response.contact.currentaddress);
       notifyRef.current.notifyMessage("Contact copied.", "info");
@@ -298,10 +300,12 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
                     <div className='close-window' onClick={onButtonClick}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </div>
-                    <div className='send-tokens-window-header'>{active ? 'Enter amount' : 'Select token'}</div>
+                    <div className='send-tokens-window-header'>{active ? 'Amount to send' : 'Select token'}</div>
                     <div className={`send-tokens-window-number ${active ? "" : "hide"}`}>
-                      <input ref={inputToken} onChange={(event) => event.target.value < 0 ? event.target.value = 0 : event.target.value} placeholder="0" type="number" pattern="\d*" min="0" />
+                      <input className={`${errorText ? 'error' : ''}`} ref={inputToken} onChange={(event) => event.target.value < 0 ? event.target.value = 0 : event.target.value} placeholder="0" type="number" pattern="\d*" min="0" />
+                      <div className='info-input'>{errorText}</div>
                     </div>
+                    <div onClick={onMaxAmountClick} className={`send-tokens-window-max ${active ? "" : "hide"}`}>MAX</div>
                     <div className='send-tokens-window-balance'>
                       {getBalance.map(((item, index)=>(
                         <div className={`send-tokens-window-balance-item ${active ? active === tokenName(item.token.name) && 'active' : ''}`} key={index} onClick={() => tokenHandler(tokenName(item.token.name), item.tokenid, item.sendable)}>
@@ -322,7 +326,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
 
                 </div>
 
-                <div className={`chat-area-footer-overlay ${showMenu ? "show" : ""}`}></div>
+                <div onClick={onMenuClick}  className={`chat-area-footer-overlay ${showMenu || showToken ? "show" : ""}`}></div>
 
                 <div className={`chat-area-footer-menu ${showMenu ? "show" : ""}`}>
                     <div className='chat-area-footer-menu-item' onClick={onButtonClick}>
@@ -341,7 +345,6 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
                 </div>
 
                 <div className="chat-area-footer">   
-                  {/* <FooterMenu />   */}
                   <form data-testid="form-submit" onSubmit={submitHandle}>
                     {baseImage ? <img src={baseImage} height="32px" width="32px" alt="" /> : "" }
                     <svg onClick={onMenuClick} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>

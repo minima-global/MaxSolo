@@ -447,6 +447,7 @@
             transition: all 0.2s ease-in-out;
             @media #{$sm-layout} {
               font-size: 1rem;
+              margin-bottom: 0.5rem;
             }
             label{
               cursor: pointer;
@@ -493,8 +494,6 @@
           z-index: 10;
           width: 100%;
           height: 100%;
-          top: 0;
-          left: 0;
           align-items: center;
           justify-content: center;
           flex-direction: column;
@@ -505,6 +504,7 @@
             position: absolute;
             top: 30px;
             right: 30px;
+            cursor: pointer;
             svg{
               width: 24px;
               height: 24px;
@@ -543,6 +543,9 @@
               &:focus{
                 outline: none;
               }
+              &.error{
+                color: #f00;
+              }
             }
             input::-webkit-outer-spin-button,
             input::-webkit-inner-spin-button {
@@ -557,7 +560,7 @@
           }
           &-balance{
             overflow-y: scroll !important;
-            height: 248px;
+            // height: 248px;
             width: 310px;
             // pointer-events: none;
 
@@ -570,7 +573,7 @@
               padding: 5px;
               border-radius: 12px;
               border: 1px solid var(--color-token-border-active);
-              margin-bottom: 1rem;
+              margin-bottom: 0.65rem;
               transition: all 0.4s ease-in-out;
               .token-logotype{
                 overflow: hidden;
@@ -608,6 +611,33 @@
               &.false{
                 display: none;
               }
+            }
+          }
+          &-max{
+            display: flex;
+            border-radius: 50%;
+            background: #000;
+            color:rgb(227, 227, 227);
+            font-weight: 800;
+            font-size: 0.75rem;
+            cursor: pointer;
+            width: 42px;
+            height: 42px;
+            align-items: center;
+            justify-content: center;
+            margin-left: 264px;
+            margin-bottom: 10px;
+            transition: 0.2s all ease-in-out;
+            &:hover{
+              background-color: #1344bc;
+              transform: scale(0.94);
+              @media #{$sm-layout} {
+                transform: scale(1);
+              }
+
+            }
+            &.hide{
+              display: none;
             }
           }
           &-buttons{
@@ -744,6 +774,20 @@
             &.hide{
               display: none;
             }
+          }
+          @media #{$lg-up-device} {
+            width: 560px;
+            height: 560px;
+            border-radius: 20px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding-top: 40px;
+          }
+          .info-input{
+            text-align: center;
+            font-weight: 700;
+            color: red;
           }
         }
       }
