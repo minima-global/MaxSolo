@@ -48,7 +48,7 @@ $p: 8px;
     opacity: 1;
     height: 50px;
     padding: 10px;
-    transition: visibility 0s linear 0s, opacity 300ms, height 0.4s;
+    transition: visibility 0s linear 0s, opacity 300ms, height 0.2s;
   }
   
   &.slideOut {
@@ -56,7 +56,7 @@ $p: 8px;
     opacity: 0;
     height: 0px;
     padding: 0px 10px;
-    transition: visibility 0s linear 300ms, opacity 300ms, height 0.4s;
+    transition: visibility 0s linear 300ms, opacity 300ms, height 0.2s;
   }
   &.error{
     background: var(--color-notification-error);
@@ -124,7 +124,7 @@ $p: 8px;
         opacity: 1;
         height: auto;
         padding: 10px;
-        transition: visibility 0s linear 0s, opacity 300ms, height 0.4s;
+        transition: visibility 0s linear 0s, opacity 300ms, height 0.2s;
       }
       
       &.slideOut {
@@ -132,7 +132,7 @@ $p: 8px;
         opacity: 0;
         height: 0px;
         padding: 0px 10px;
-        transition: visibility 0s linear 300ms, opacity 300ms, height 0.4s;
+        transition: visibility 0s linear 300ms, opacity 300ms, height 0.2s;
       }
       &.error{
         background: var(--color-notification-error);

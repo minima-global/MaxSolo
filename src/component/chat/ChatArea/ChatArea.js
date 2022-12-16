@@ -96,6 +96,17 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
     setTokenID(id);
   }
 
+
+  const onSetErrorClick = (copy) => {
+    console.log("Error copy", copy);
+    setErrorText(copy); 
+    setTimeout(function() { 
+      setErrorText(""); 
+      setShowSendTokenBut(false);
+      return;
+    }, 3000);
+  }
+
   const submitToken = (e) => {
     // console.log("Submit token", tokenSendable)
     e.preventDefault();
@@ -106,30 +117,25 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
     const tokenamount = inputToken.current.value;
     const tokenname = tokenTitle;
 
-    if(tokenamount == "" || tokenamount < 0 || tokenamount == 0 ){
-      alert("Invalid amount...");
-      // setErrorText("Invalid amount...")
-      return;
+    if( tokenamount == "" || tokenamount <= 0 ){
+      return onSetErrorClick("Invalid amount..."); 
     }
 
     if(tokenid == ""){
-      alert("Please select token...");
-      return;
+      return onSetErrorClick("Please select token...");
     }
 
     const roundedAmount = new Decimal(tokenamount).toDecimalPlaces(18).toString();
+    const tokenamountsend = new Decimal(inputToken.current.value);
+    const tokenamountsendable = new Decimal(tokenSendable);
+
     setTokenAmount(tokenamount);
     setShowMenu(false);
     setShowSendTokenBut(true);
 
-    const tokenamountsend = new Decimal(inputToken.current.value);
-    // console.log("Amount"+roundedAmount);
+    console.log("Check", tokenamountsend, tokenamountsendable);
 
-    if(tokenamount > tokenSendable){      
-      alert("Insufficient funds...");
-      // setErrorText("Insufficient funds...");
-      return;
-    }
+    if(tokenamountsend.greaterThan(tokenamountsendable))return onSetErrorClick ("Insufficient funds..."); 
 
     window.MDS.cmd("maxcontacts action:search publickey:"+publicRoomKey,function(resp){
 		    
@@ -152,7 +158,8 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
   
         //Did it work..
         if(resp.status == false){
-          //Is it pending..
+          //Is it pending...
+          // onSetErrorClick(resp.message); 
           if(resp.pending){
             // alert("This transaction is now pending!");
             tokenSendData('Transaction pending of');
@@ -259,7 +266,8 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
             </div>
 
             <UserProfile deleteContact={deleteContact} roomName={roomName} lastSeen={lastSeen} deleteMessages={deleteMessages} publicRoomKey={publicRoomKey} showUserProfile={showUserProfile} setShowUserProfile={setShowUserProfile} />
-
+            <div onClick={onMenuClick}  className={`chat-area-footer-overlay ${showMenu || showToken ? "show" : ""}`}></div>
+           
             <div className="maxsolo-chat-area-main">
 
                 <div className='maxsolo-chat-area-main-notification'>
@@ -276,7 +284,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
                       {item.MESSAGE === "Chat" ? null : 
                       <div className={`chat-msg ${item.ROOMNAME === item.USERNAME ? "" : "owner"}`}>
                       <div className="chat-msg-profile">
-                        <Avatar className="chat-msg-img" name={item.ROOMNAME === item.USERNAME ? item.ROOMNAME : item.USERNAME} size={40} round={true} maxInitials={2}/>
+                        {/* <Avatar className="chat-msg-img" name={item.ROOMNAME === item.USERNAME ? item.ROOMNAME : item.USERNAME} size={40} round={true} maxInitials={2}/> */}
                         <div className="chat-msg-date">
                           {getTime(item.DATE)}
                         </div>
@@ -326,9 +334,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
 
                 </div>
 
-                <div onClick={onMenuClick}  className={`chat-area-footer-overlay ${showMenu || showToken ? "show" : ""}`}></div>
-
-                <div className={`chat-area-footer-menu ${showMenu ? "show" : ""}`}>
+                <div className={`chat-area-footer-menu ${showMenu && !showToken ? "show" : ""}`}>
                     <div className='chat-area-footer-menu-item' onClick={onButtonClick}>
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 20V4M17 4L20 7M17 4L14 7" stroke="#91919D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M7 4V20M7 20L10 17M7 20L4 17" stroke="#91919D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                       Send tokens

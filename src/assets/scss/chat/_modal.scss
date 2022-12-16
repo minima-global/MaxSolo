@@ -12,7 +12,7 @@
     position: absolute;
     z-index: 11;
     top: 0;
-    left: -100%;
+    right: -100%;
     justify-content: center;
     align-items: center;
     transition: all 0.1s ease-in-out;
@@ -21,13 +21,13 @@
 
     @media #{$lg-up-device} {
       background: rgba(0, 0, 0, 0.7);
-      left: 0px;
+      right: 0px;
       opacity: 0;
     }
 
     &.active{
       display: flex;
-      left: 0%;
+      right: 0%;
       pointer-events: auto;
       @media #{$lg-up-device} {
         opacity: 1;

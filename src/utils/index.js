@@ -88,7 +88,7 @@ const openInNewTab = (url) => {
 
 function showNotification(from, message){
 	
-	window.MDS.log("NOTIFICATION : "+message+" permission:"+Notification.permission+" visibility:"+document.visibilityState);
+	// window.MDS.log("NOTIFICATION : "+message+" permission:"+Notification.permission+" visibility:"+document.visibilityState);
   console.log("NOTIFICATION : "+message+" permission:"+Notification.permission+" visibility:"+document.visibilityState);
 	
 	//Only show if we can''t see it..
