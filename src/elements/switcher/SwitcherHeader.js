@@ -1,46 +1,73 @@
 import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MoonIcon, SunIcon } from '../icons/MaxSoloIcons';
 
 const SwitcherHeader = () => {
 
     const [switchMode, setSwitchMode] = useState('Light mode');
 
-    const SunIcon = () => {
-        return(
-        <>
-            <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M11.25 15.4966C12.2167 15.4966 13.0417 15.1549 13.725 14.4716C14.4083 13.7882 14.75 12.9632 14.75 11.9966C14.75 11.0299 14.4083 10.2049 13.725 9.52158C13.0417 8.83825 12.2167 8.49658 11.25 8.49658C10.2833 8.49658 9.45833 8.83825 8.775 9.52158C8.09167 10.2049 7.75 11.0299 7.75 11.9966C7.75 12.9632 8.09167 13.7882 8.775 14.4716C9.45833 15.1549 10.2833 15.4966 11.25 15.4966ZM11.25 16.9966C9.86667 16.9966 8.6875 16.5091 7.7125 15.5341C6.7375 14.5591 6.25 13.3799 6.25 11.9966C6.25 10.6132 6.7375 9.43408 7.7125 8.45908C8.6875 7.48408 9.86667 6.99658 11.25 6.99658C12.6333 6.99658 13.8125 7.48408 14.7875 8.45908C15.7625 9.43408 16.25 10.6132 16.25 11.9966C16.25 13.3799 15.7625 14.5591 14.7875 15.5341C13.8125 16.5091 12.6333 16.9966 11.25 16.9966ZM0.25 12.7466V11.2466H4.25V12.7466H0.25ZM18.25 12.7466V11.2466H22.25V12.7466H18.25ZM10.5 4.99658V0.996582H12V4.99658H10.5ZM10.5 22.9966V18.9966H12V22.9966H10.5ZM5.775 7.57158L3.3 5.09658L4.35 4.04658L6.825 6.52158L5.775 7.57158ZM18.15 19.9466L15.675 17.4716L16.725 16.4216L19.2 18.8966L18.15 19.9466ZM16.725 7.57158L15.675 6.52158L18.15 4.04658L19.2 5.09658L16.725 7.57158ZM4.35 19.9466L3.3 18.8966L5.775 16.4216L6.825 17.4716L4.35 19.9466Z" />
-            </svg>
-        </>
-        )
-    }
+    const storeMode = async (value) => {
+        try {
+          await AsyncStorage.setItem("mode", JSON.stringify(value));
+        } catch (error) {
+          console.log(error);
+        }
+    };
 
-    const MoonIcon = () => {
-        return(
-        <>
-            <svg width="23" height="22" viewBox="0 0 23 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 18.9966C6.5 18.9966 4.375 18.1216 2.625 16.3716C0.875 14.6216 0 12.4966 0 9.99658C0 7.49658 0.875 5.37158 2.625 3.62158C4.375 1.87158 6.5 0.996582 9 0.996582C9.13333 0.996582 9.275 1.00075 9.425 1.00908C9.575 1.01742 9.76667 1.02992 10 1.04658C9.4 1.57992 8.93333 2.23825 8.6 3.02158C8.26667 3.80492 8.1 4.62992 8.1 5.49658C8.1 6.99658 8.625 8.27158 9.675 9.32158C10.725 10.3716 12 10.8966 13.5 10.8966C14.3667 10.8966 15.1917 10.7424 15.975 10.4341C16.7583 10.1257 17.4167 9.69658 17.95 9.14658C17.9667 9.34658 17.9792 9.50908 17.9875 9.63408C17.9958 9.75908 18 9.87992 18 9.99658C18 12.4966 17.125 14.6216 15.375 16.3716C13.625 18.1216 11.5 18.9966 9 18.9966ZM9 17.4966C10.8167 17.4966 12.4 16.9341 13.75 15.8091C15.1 14.6841 15.9417 13.3632 16.275 11.8466C15.8583 12.0299 15.4125 12.1674 14.9375 12.2591C14.4625 12.3507 13.9833 12.3966 13.5 12.3966C11.5833 12.3966 9.95417 11.7257 8.6125 10.3841C7.27083 9.04242 6.6 7.41325 6.6 5.49658C6.6 5.09658 6.64167 4.66742 6.725 4.20908C6.80833 3.75075 6.95833 3.22992 7.175 2.64658C5.54167 3.09658 4.1875 4.00908 3.1125 5.38408C2.0375 6.75908 1.5 8.29658 1.5 9.99658C1.5 12.0799 2.22917 13.8507 3.6875 15.3091C5.14583 16.7674 6.91667 17.4966 9 17.4966Z"/>
-            </svg>
-        </>
-        )
-    }
+    // const removeData = async () => {
+    //     try {
+    //         const savedMode = await AsyncStorage.clear();
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     useEffect(() => {
-        const colorMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        if(colorMode){
-            document.querySelector('body').classList.add("active-dark-mode");
-        }
+        const getMode = async () => {
+            try {
+                const modeData = JSON.parse(await AsyncStorage.getItem("mode"))
+                // console.log('Theme mode: ' + modeData);
+                if(modeData === null){
+                    const colorMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                    if(colorMode){
+                        document.querySelector('body').classList.add("active-dark-mode");
+                        setSwitchMode('Dark mode');
+                    }
+                }
+                if(modeData === 'Light mode'){
+                    document.querySelector('body').classList.remove("active-dark-mode");
+                    setSwitchMode('Light mode');
+                }else{
+                    document.querySelector('body').classList.add("active-dark-mode");
+                    setSwitchMode('Dark mode');
+                }
+            } catch (error) {
+                console.log(error); 
+            }
+        };
+        
+        getMode();
+
     }, []);
   
     const switchColor = () => {
-        document.querySelector('body').classList.toggle("active-dark-mode");
-        switchMode === 'Dark mode' ? setSwitchMode('Light mode') : setSwitchMode('Dark mode');        
+        if(switchMode === 'Light mode'){
+            document.querySelector('body').classList.add("active-dark-mode");
+            setSwitchMode('Dark mode');
+            storeMode('Dark mode'); 
+        }else{
+            document.querySelector('body').classList.remove("active-dark-mode");
+            setSwitchMode('Light mode');
+            storeMode('Light mode'); 
+        }
     }
 
     return (
         <>
             <div onClick={switchColor} className = {`maxsolo-sidebar-menu-item-tab`}>
-                {switchMode === "Light mode" ? <SunIcon /> : <MoonIcon />}{switchMode}
+                {switchMode === "Dark mode" ? (<><SunIcon/> Light mode</>) : (<><MoonIcon/> Dark mode</>)}
             </div>
+            {/* <div onClick={removeData}>Remove</div> */}
         </>
     )
 }

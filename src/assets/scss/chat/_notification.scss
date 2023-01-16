@@ -65,7 +65,7 @@ $p: 8px;
     background: var(--color-notification-info);
   }
   &.info-sidebar{
-    margin-top: 1.875em;
+    margin-top: 1.5em;
     background: var(--color-notification-info-sidebar);
     height: 80px;
     .maxsolo-sidebar-notification-content{
@@ -92,7 +92,7 @@ $p: 8px;
       align-items: center;
       justify-content: left;
       display: flex;
-      z-index: 1000;
+      z-index: 0;
       &-icon{
         font-size: 1rem;
         width: 16px;

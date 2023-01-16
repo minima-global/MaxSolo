@@ -12,7 +12,9 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    &:hover, :active{
-        background: rgb(32, 92, 197);
-    }
+    @media #{$lg-up-device} {
+        &:hover{
+            background: rgb(32, 92, 197);
+        }
+      }
 }

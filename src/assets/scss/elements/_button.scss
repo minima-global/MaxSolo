@@ -85,6 +85,9 @@
             color: var(--color-white) !important;
             transform: scale(0.94);
         }
+        &.notactive{
+            background-color: #ACCAFF;
+        }
     }
     &.btn-fill-red-medium {
         background-color: red;

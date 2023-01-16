@@ -29,16 +29,20 @@ const UserProfile = ({ showUserProfile, deleteContact, deleteMessages, lastSeen,
       });
     };
 
-    const GoBack = () =>{
+    const BackIcon = () =>{
       return(
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+            <path d="M24 40 8 24 24 8l2.1 2.1-12.4 12.4H40v3H13.7l12.4 12.4Z"/>
+          </svg>
+        </>
       )
     }
 
     return (
         <div className={`maxsolo-modal-container ${showUserProfile ? 'active' : ''}`} >
             <div className='maxsolo-modal-container-button' onClick={onCancelClick}>
-              <GoBack /> Back
+              <BackIcon /> Back
             </div>
             <div className={`maxsolo-modal-container-content ${confirmDelete || confirmRemove ? 'hide' : ''}`}>
 

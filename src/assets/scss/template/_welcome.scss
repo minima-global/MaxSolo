@@ -131,13 +131,16 @@
     overflow: hidden;
     overscroll-behavior: none;
 
-    &-symbol{    
+    &-symbol{
+        // animation: tilt-shaking 1s;  
+        // animation: rotating 0.5s 2 0.8s both;
+        // animation-delay: 3.5s;      
         svg{ 
             width: 128px;
             height: 128px;
             .svg-symbol {
-            animation: animate-symbol-stroke 2s cubic-bezier(0.47, 0, 0.745, 0.715) 0s both,
-                         animate-symbol-fill 0.7s cubic-bezier(0.95, 0.05, 0.795, 0.035) 0.8s both;
+            // animation: animate-symbol-stroke 2s cubic-bezier(0.47, 0, 0.745, 0.715) 0s both,
+            //              animate-symbol-fill 0.7s cubic-bezier(0.95, 0.05, 0.795, 0.035) 0.8s both;
             }
         }
     }
@@ -146,7 +149,7 @@
         bottom: 40px;
         img{
             width: 128px;
-            animation: 3s ease 0s normal forwards 1 fadein;
+            // animation: 1s ease 0s normal forwards 1 fadein;
         }
     }
 }
@@ -220,6 +223,51 @@
     }
 }
 
+.welcome-contacts{
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    background: var(--send-window);
+    border-radius: 6px;
+    padding: 40px 10px;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+
+    animation: fadeIn 0.4s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+
+    &-body{
+        &-icon{
+            width: 100px;
+            display: flex;
+
+        }
+        &-header{
+            color: var(--color-body-header);
+            display: flex;
+            font-size: 22px;
+            text-align: center;
+            margin: 1rem auto;
+            font-weight: 700;
+            line-height: 32px;
+        }
+        &-copy{
+            display: flex;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 26px;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--color-body-copy);
+        }
+    }
+    .minima-btn{
+        width: 90%;
+    }
+}
+
 // Animation for MaxSolo welcome screen
 
  @keyframes animate-symbol-stroke {
@@ -256,41 +304,47 @@
     }
 }
 
-.welcome-contacts{
-    display: flex;
-    flex-direction: column;
-    margin: 20px;
-    background: var(--send-window);
-    border-radius: 6px;
-    padding: 40px 10px;
-    justify-content: center;
-    align-items: center;
-    &-body{
-        &-icon{
-            width: 100px;
-            display: flex;
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
-        }
-        &-header{
-            color: var(--color-body-header);
-            display: flex;
-            font-size: 22px;
-            text-align: center;
-            margin: 1rem auto;
-            font-weight: 700;
-            line-height: 32px;
-        }
-        &-copy{
-            display: flex;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 26px;
-            text-align: center;
-            margin-bottom: 3rem;
-            color: var(--color-body-copy);
-        }
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes rotating {
+    from{
+        -webkit-transform: rotate(0deg);
     }
-    .minima-btn{
-        width: 90%;
+    to{
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes scaleup {
+    0% {
+        transform: scale(1.0) translateY(0%);
+    }
+    100% {
+        transform: scale(45.0) translateY(-20%);
+    }
+}
+
+@keyframes shaking {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg); }
+    50% { transform: rotate(0eg); }
+    75% { transform: rotate(-5deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
     }
 }

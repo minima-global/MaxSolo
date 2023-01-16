@@ -139,7 +139,7 @@ const ChatWindow = () => {
       setLastSeen(getTime(lastArr[0]?.lastseen));
       setGetCurrentAddress(lastArr[0]?.currentaddress);
       setGetContactId(lastArr[0]?.id);
-      
+
     }
 
     // Set all messages to read
@@ -174,7 +174,6 @@ const ChatWindow = () => {
         insertMessage(roomName, publicRoomKey, responseName, jsondata.type, jsondata.message, jsondata.filedata, function(){    
           //Load all the messages
           loadMessages(publicRoomKey);	
-          
         });
         loadLastMessage();			
       }
@@ -244,15 +243,10 @@ const ChatWindow = () => {
   const handleTabClosing = () => {
     window.MDS.comms.solo(JSON.stringify({ target: "service", keepAlive: true }));
   }
-
-
  
     return (
 		<>
         <div className="maxsolo-wrapper">
-                {/* <div className='main-notification'>
-                  <NotificationSidebar ref={notifyRef} />
-                </div> */}
                 <SideBar 
                 lastMessage={lastMessage} 
                 contacts={contacts} 

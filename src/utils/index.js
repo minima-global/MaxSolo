@@ -120,7 +120,7 @@ function linkOutput(str) {
       );
     }
     results.push(
-      <a key={results.length} href={link} target="_blank">{link}</a>
+      <a key={results.length} href={link} target="_blank" rel="noreferrer">{link}</a>
     );
     lastIndex = match.index + link.length;
   }

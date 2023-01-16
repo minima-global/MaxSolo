@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import SEO from '../common/SEO';
 import ChatWindow from '../component/chat/ChatWindow';
 import WelcomeMaxSolo from '../component/welcome/WelcomeMaxSolo';
 import WelcomeLogo from '../component/welcome/WelcomeLogo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Logoimage from '../assets/images/maxsolo_blue_logo.svg'
+import Logoimage from '../assets/images/maxsolo_blue_logo.svg';
 
 
 const DashBoard = () => {
@@ -36,13 +35,12 @@ const DashBoard = () => {
         setHowItWorks(!howItWorks);
     }
 
-
     useEffect(()=>{
         setTimeout(function() {
             setShowLogo(false)
-        }, 3000);
-
+        }, 2300);
     },[])
+    
 
     const WelcomeButton = () => {
         return (
@@ -80,12 +78,11 @@ const DashBoard = () => {
 
     return (
         <>
-        <SEO title="MaxSolo"/>
         <main className='app'>
             { isAppFirstLaunched && showLogo ? <WelcomeLogo />  : null} 
             { isAppFirstLaunched && showWelcome ? <WelcomeMaxSolo /> : <ChatWindow /> } 
             { isAppFirstLaunched && showWelcome ? <WelcomeButton />: null} 
-        </main>        
+        </main> 
         </>
     )
 }

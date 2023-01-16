@@ -15,7 +15,7 @@
     right: -100%;
     justify-content: center;
     align-items: center;
-    transition: all 0.1s ease-in-out;
+    transition: all 0.2s ease-in-out;
     padding: 20px;
     pointer-events: none;
 
@@ -40,17 +40,18 @@
       align-items: center;
       flex-direction: row;
       width: 100%;
-      // border: solid orange 2px;
       font-size: 1rem;
       font-weight: 700;
       letter-spacing: -0.025em;
       color: var(--msg-username);
-      margin: 0.5rem 1rem auto 1rem;
+      margin: 2px 26px auto 17px;
+      // margin: 0.5rem 1rem auto 1rem;
       cursor: pointer;
       svg{
-        width: 20px;
-        height: 20px;
+        width: 30px;
+        height: 30px;
         margin-right: 0.5rem;
+        fill: var(--msg-username);
       }
       @media #{$lg-up-device} {
         display: none;
@@ -116,18 +117,6 @@
           opacity: 0;
         }
       }
-
-      // .info-message{
-      //   text-align: center;
-      //   margin: 1rem auto;
-      //   font-weight: 700;
-      //   color: var(--color-notification-info-sidebar-success);
-      // }
-      // .info-input{
-      //   text-align: center;
-      //   font-weight: 700;
-      //   color: red;
-      // }
     }
     &-confirm-delete{
       z-index: 12;
@@ -142,7 +131,7 @@
         height: 100vh;
         left: 0px;
         opacity: 0;
-        transition: all 0.2s ease-in-out;
+        transition: all 0.15s ease-in-out;
         width: 100%;
         overflow: hidden;
         pointer-events: none;
@@ -170,7 +159,7 @@
         bottom: -500px;
         left: 0px;
         opacity: 0;
-        transition: 0.2s all ease-in-out;
+        transition: 0.15s all ease-in-out;
         color: var(--msg-username);
         .copy{
           text-align: center;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BackIcon } from '../icons/MaxSoloIcons';
 
 const AddContact = ({ isSelectedTab, setIsOpen, setSelectedTab, restartContacts }) => {
 
@@ -15,7 +16,7 @@ const AddContact = ({ isSelectedTab, setIsOpen, setSelectedTab, restartContacts 
         const addcontact = "maxcontacts action:add contact:"+contactData+"";
         window.MDS.cmd(addcontact, function(resp) {
           if(resp.status) {
-            // console.log(resp);
+            console.log(resp);
             setContactData('');
             restartContacts();
             setSelectedTab(0);
@@ -24,8 +25,7 @@ const AddContact = ({ isSelectedTab, setIsOpen, setSelectedTab, restartContacts 
             setInfoNotifyText('This address is not valid. Please ask your contact to send it again and enter it within a 10 minute window.');
             setTimeout(() => {
               setInfoNotifyText('');
-              setContactData('');
-            }, 5000); 
+            }, 3000); 
           }
         });
       }
@@ -35,16 +35,10 @@ const AddContact = ({ isSelectedTab, setIsOpen, setSelectedTab, restartContacts 
       setSelectedTab(0);
     };
 
-    const GoBack = () =>{
-      return(
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-      )
-    }
-
     return (
         <div className={`maxsolo-sidebar-container ${isSelectedTab === 2 ? 'active' : ''}`} >
             <div className='maxsolo-sidebar-container-button' onClick={addContact}>
-              <GoBack /> Add contact
+              <BackIcon /> Add contact
             </div>
             <div className='maxsolo-sidebar-container-content'>
               <div className='main-title'>Enter your contact’s Minima address</div>

@@ -17,6 +17,7 @@
     --msg-hover-bg: rgba(47, 50, 56, 0.54);
     --chat-text-bg: #383b40;
     --chat-text-color: #a1a3a6;
+    --chat-text-color: #ffffff;
     --msg-date: #626466;
     --msg-message: var(--msg-date);
     --msg-username: var(--color-white);
@@ -55,6 +56,7 @@
     --msg-username-active: #FFFFFF;
     --contacts-line: rgba(255,255,255,0.1);
     --sidebar-line: rgba(255,255,255, 0.2);
+    --menu-weight: 600;
  
     body {
         color: var(--dark-body-text);
@@ -83,30 +85,30 @@
         color: var(--dark-body-text);
     }
 
-    input,
-    .form-control {
-        color: var(--dark-body-text);
-        border-color: var(--dark-border-gray);
-        &:focus {
-            box-shadow: none;
-            border-color: transparent;
-            background-color: #171717;
-        }
-        /* -- Placeholder -- */
-        &::placeholder {
-            color: var(--dark-body-text);
-            /* Firefox */
-            opacity: 1;
-        }
-        &:-ms-input-placeholder {
-            /* Internet Explorer 10-11 */
-            color: var(--dark-body-text);
-        }
-        &::-ms-input-placeholder {
-            /* Microsoft Edge */
-            color: var(--dark-body-text);
-        }
-    }
+    // input,
+    // .form-control {
+    //     color: var(--dark-body-text);
+    //     border-color: var(--dark-border-gray);
+    //     &:focus {
+    //         box-shadow: none;
+    //         border-color: transparent;
+    //         background-color: #171717;
+    //     }
+    //     /* -- Placeholder -- */
+    //     &::placeholder {
+    //         color: var(--dark-body-text);
+    //         /* Firefox */
+    //         opacity: 1;
+    //     }
+    //     &:-ms-input-placeholder {
+    //         /* Internet Explorer 10-11 */
+    //         color: var(--dark-body-text);
+    //     }
+    //     &::-ms-input-placeholder {
+    //         /* Microsoft Edge */
+    //         color: var(--dark-body-text);
+    //     }
+    // }
 
     .input-group {
         background-color: #171717;
