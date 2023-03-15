@@ -87,22 +87,16 @@ const openInNewTab = (url) => {
 }
 
 function showNotification(from, message){
-	
-	// window.MDS.log("NOTIFICATION : "+message+" permission:"+Notification.permission+" visibility:"+document.visibilityState);
-  console.log("NOTIFICATION : "+message+" permission:"+Notification.permission+" visibility:"+document.visibilityState);
-	
 	//Only show if we can''t see it..
-	if(document.visibilityState !== "visible") {
-	     
+	if(document.visibilityState !== "visible") {   
 		// If it's okay let's create a notification
 		if (Notification.permission === "granted") {
 	      const notification = new Notification(from,{
 			  body: message,
 			  icon: './minimalogo.png'
 			});
-	    }
+	  }
 	}
-	
 }
 
 const RE_URL = /\w+:\/\/\S+/g;

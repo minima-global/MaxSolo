@@ -138,4 +138,35 @@ const PlusIcon = () => {
   )
 }
 
-export {SunIcon, MoonIcon, UserIcon, ShareIcon, HelpIcon, CheckIcon, BackIcon, RefreshIcon, CopyIcon, AddImage, TokenIcon, SendIcon, SendActive, PlusIcon};
+const LockP2P = () => {
+  return(
+    <>
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 24 24">
+          <path  d="M8.42,6.99v2.15h7.16V6.99c0-1.98-1.6-3.58-3.58-3.58S8.42,5.01,8.42,6.99z M5.56,9.14V6.99 c0-3.56,2.89-6.44,6.44-6.44s6.44,2.89,6.44,6.44v2.15h0.72c1.58,0,2.86,1.28,2.86,2.86v8.59c0,1.58-1.28,2.86-2.86,2.86H4.84 c-1.58,0-2.86-1.28-2.86-2.86V12c0-1.58,1.28-2.86,2.86-2.86H5.56z"/>
+      </svg>
+    </>
+  )
+}
+
+const CloseIcon = () => {
+  return(
+    <>
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </>
+  )
+}
+
+const NewChat = () => {
+  return(
+    <>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8.81152 11.75H10.3115V8.75H13.3115V7.25H10.3115V4.25H8.81152V7.25H5.81152V8.75H8.81152V11.75ZM0.0615234 19.05V2.3C0.0615234 1.8 0.236524 1.375 0.586524 1.025C0.936524 0.675 1.36152 0.5 1.86152 0.5H17.2615C17.7615 0.5 18.1865 0.675 18.5365 1.025C18.8865 1.375 19.0615 1.8 19.0615 2.3V13.7C19.0615 14.2 18.8865 14.625 18.5365 14.975C18.1865 15.325 17.7615 15.5 17.2615 15.5H3.61152L0.0615234 19.05ZM1.56152 15.425L2.98652 14H17.2615C17.3449 14 17.4159 13.9707 17.4745 13.912C17.5325 13.854 17.5615 13.7833 17.5615 13.7V2.3C17.5615 2.21667 17.5325 2.14567 17.4745 2.087C17.4159 2.029 17.3449 2 17.2615 2H1.86152C1.77819 2 1.70752 2.029 1.64952 2.087C1.59086 2.14567 1.56152 2.21667 1.56152 2.3V15.425ZM1.56152 2.3V2V15.425V2.3Z" fill="white"/>
+      </svg>
+    </>
+  )
+}
+
+export {SunIcon, MoonIcon, UserIcon, ShareIcon, HelpIcon, CheckIcon, BackIcon, RefreshIcon, CopyIcon, AddImage, TokenIcon, SendIcon, SendActive, PlusIcon, LockP2P, CloseIcon, NewChat};

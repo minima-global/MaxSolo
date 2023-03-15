@@ -1,13 +1,14 @@
 import React, {useState, useEffect, useCallback } from 'react';
-import { utf8ToHex, getTime, showNotification } from '../../utils';
+import { utf8ToHex, hexToUtf8, getTime, showNotification } from '../../utils';
 import { events } from "./../../minima/libs/events";
 import WelcomeLoader from '../../elements/loader/WelcomeLoader';
 import SideBar from './SideBar/SideBar';
 import ChatArea from './ChatArea/ChatArea';
+import LoaderSpin from '../../elements/loader/LoaderSpin';
 
 const ChatWindow = () => {
 
-  const [isChatLoading, setIsChatLoading] = useState(false);
+  const [isChatLoading, setIsChatLoading] = useState(true);
   const [contacts, setContacts] = useState([]);
   const [chatData, setChatData] = useState([]);
   const [lastMessage, setLastMessage] = useState([]);
@@ -21,7 +22,6 @@ const ChatWindow = () => {
   const [responseName, setResponseName] = useState('');
   const [responseContact, setResponseContact] = useState('');
 
-
   const getContacts = useCallback(() => {
 
     window.MDS.cmd("maxima",function(result){
@@ -31,72 +31,25 @@ const ChatWindow = () => {
       setResponseContact(result.response.contact);
     }); 
 
+    window.MDS.cmd("balance",function(result){
+      //Get the balance
+      setGetBalance(result.response);
+    });
+
+    restartChatContacts();
+    loadLastMessage(); 
+    
+  }, []); 
+
+  const restartChatContacts = () => {
     window.MDS.cmd("maxcontacts",function(result){  
       //Get contacts  
-      console.log("Get contacts", result.response.contacts);
       setContacts([...result.response.contacts]);
-      setIsChatLoading(true);
-
-      window.MDS.sql("SELECT * from messages WHERE ID in "
-      +"( SELECT max(ID) FROM messages GROUP BY publickey)", function(sqlmsg){
-        //Get the Array
-        // console.log("DB before filtering", sqlmsg.rows)
-        if(sqlmsg.status){
-
-            // Check if existing contact updated name in Maxima
-            const newnameref = sqlmsg.rows.reduce((obj, o) => (obj[o.ROOMNAME] = true, obj), {});
-            const newname = result.response.contacts.filter(o => !newnameref[o.extradata.name]);   
-            
-            // Check local DB if contact deleted from Maxima
-            const dbref = result.response.contacts.reduce((obj, o) => (obj[o.publickey] = true, obj), {});            
-            const dbkeys = sqlmsg.rows.filter(o => !dbref[o.PUBLICKEY]);
-
-            // Check Maxima for a new contact
-            const contactsref = sqlmsg.rows.reduce((obj, o) => (obj[o.PUBLICKEY] = true, obj), {});
-            const newkeys = result.response.contacts.filter(o => !contactsref[o.publickey]);
-
-            if(dbkeys.length > 0){
-              dbkeys.map(((item)=>(
-                window.MDS.sql("DELETE from messages WHERE publickey='"+item.PUBLICKEY+"'", function(sqlmsg){      
-                  if(sqlmsg.status){
-                    // console.log("Deleted from DB", item.PUBLICKEY, item.ID, item.ROOMNAME)
-                  }
-                })  
-              )));
-            }
-
-            if(newkeys.length > 0){
-              newkeys.map(((item)=>(
-                insertMessage(item.extradata.name, item.publickey, responseName, 
-                  "text", "Chat", "", function(){
-                    // console.log("Adding a new contact", item.extradata.name, item.publickey, item.id)
-                })
-              )));
-            }
-
-            if(newname.length > 0){
-              newname.map(((item)=>(
-                window.MDS.sql("UPDATE messages SET ROOMNAME = '"+item.extradata.name+"' WHERE publickey='"+item.publickey+"'", function(sqlmsg){      
-                  if(sqlmsg.status){
-                    // console.log("Updated name in DB for", item.publickey, item.id, item.extradata.name)
-                  }
-                })  
-              )));
-            }
-
-            loadLastMessage();
-        }
-      });
     });
-
-    window.MDS.cmd("balance",function(result){
-      setGetBalance(result.response);
-      // console.log(result.response);
-    });
-    
-  }, []);
+  }
 
   const restartContacts = () => {
+    setIsChatLoading(true);
     setTimeout(function() {
       console.log("Contacts restarted")
       getContacts();
@@ -104,28 +57,42 @@ const ChatWindow = () => {
   }
 
   events.onMaxima((maximaMessage) => {
-    console.log("Listener", maximaMessage);
-    let pubkey = maximaMessage.from;
+    // console.log("Listener", maximaMessage, maximaMessage.application);
+    if(maximaMessage.application == "maxsolo"){
+
+      let pubkey = maximaMessage.from;
     
-    if(pubkey === publicRoomKey){
-      loadMessages(publicRoomKey);
-    }
+      if(pubkey === publicRoomKey){
+        loadMessages(publicRoomKey);
+      }
+  
+      loadLastMessage();
 
-    loadLastMessage();
+      console.log(contacts.length, lastMessage.length)
+  
+      // if(contacts.length !== lastMessage.length){
+      //   restartContacts();
+      // }
 
-    if(contacts.length !== lastMessage.length){
-      restartContacts();
-    }
-
-    if(maximaMessage.type=="text"){
-      showNotification(maximaMessage.username, maximaMessage.message);	
-    }else{
-      showNotification(maximaMessage.username, "IMAGE");
+      var datastr	= maximaMessage.data.substring(2);
+      // Convert the data..
+      var jsonstr = hexToUtf8(datastr);
+      // And create the actual JSON
+      var maxjson = JSON.parse(jsonstr);
+      // URL encode the message and deal with apostrophe..
+      let decoded = decodeURIComponent(maxjson.message).replace("%27", "'");
+  
+      showNotification(maxjson.username, decoded);
     }
   });
 
+  // Detecting App is hidden or not, for sending notifications.
+  events.onMDSTimer((time) => {
+    window.MDS.comms.solo(JSON.stringify({ appTime: time.timemilli }));
+  });
+
   const getPublicKey = (roomkey, roomname) =>{
-    // console.log("Room key", roomkey)
+    console.log("Room key", roomkey)
     setPublicRoomKey(roomkey);
     loadMessages(roomkey);
     setRoomName(roomname);
@@ -139,7 +106,6 @@ const ChatWindow = () => {
       setLastSeen(getTime(lastArr[0]?.lastseen));
       setGetCurrentAddress(lastArr[0]?.currentaddress);
       setGetContactId(lastArr[0]?.id);
-
     }
 
     // Set all messages to read
@@ -148,8 +114,6 @@ const ChatWindow = () => {
   }
 
   const sendData = (jsondata) =>{
-
-    // console.log(jsondata)
 	
     //Convert to a string..
     var datastr = JSON.stringify(jsondata);
@@ -199,16 +163,15 @@ const ChatWindow = () => {
     window.MDS.sql("SELECT * from messages WHERE publickey='"+key+"' ORDER BY ID DESC LIMIT 200", function(sqlmsg){
       // console.log(sqlmsg.status);
       if(sqlmsg.status){
-        setIsChatLoading(false);
         setChatData(sqlmsg.rows.reverse());
       }
     }); 
   }
 
   function loadLastMessage(){
-    // console.log("Loaded last messages")
+    // window.MDS.sql("SELECT * from messages WHERE ID in "
     window.MDS.sql("SELECT * from messages WHERE ID in "
-    +"( SELECT max(ID) FROM messages GROUP BY publickey ) ORDER BY ID DESC", function(sqlmsg){
+      +"( SELECT max(ID) FROM messages GROUP BY publickey ) ORDER BY ID DESC", function(sqlmsg){
       //Get the data
       if(sqlmsg.status){
         let sqlrows = sqlmsg.rows;
@@ -220,32 +183,11 @@ const ChatWindow = () => {
   useEffect(()=>{
     getContacts();
   },[getContacts]);
-
-  // Detecting App is hidden or not, for sending notifications.
-
-  useEffect(() => {
-    setInterval(() => {
-      if(document.hidden) {
-        window.MDS.comms.solo(JSON.stringify({ target: "service", keepAlive: false }));
-      }else{
-        window.MDS.comms.solo(JSON.stringify({ target: "service", keepAlive: true }));
-      }
-    }, 30000);
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('beforeunload', handleTabClosing)
-    return () => {
-        window.removeEventListener('beforeunload', handleTabClosing)
-    }
-  })
-
-  const handleTabClosing = () => {
-    window.MDS.comms.solo(JSON.stringify({ target: "service", keepAlive: true }));
-  }
  
     return (
-		<>
+		<>          
+        {responseName ? 
+        
         <div className="maxsolo-wrapper">
                 <SideBar 
                 lastMessage={lastMessage} 
@@ -255,6 +197,7 @@ const ChatWindow = () => {
                 restartContacts={restartContacts}
                 responseContact={responseContact}
                 responseName={responseName}
+                restartChatContacts={restartChatContacts}
                 />
                 {isChatLoading ? <WelcomeLoader /> : <ChatArea 
                 loadMessages={loadMessages} 
@@ -270,9 +213,8 @@ const ChatWindow = () => {
                 getContactId={getContactId}
                 responseName={responseName}
                 restartContacts={restartContacts}
-                />
-                }
-        </div>
+                />}
+        </div> : <LoaderSpin /> }
 		</>
     )
 }

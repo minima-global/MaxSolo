@@ -16,7 +16,7 @@ const WelcomeLogo = () => {
 
     return (
         <>
-        <div data-testid="welcome-logo" className='welcome-logo' >  
+        <div data-testid="welcome-logo" className='welcome-logo clip-animation' >  
             <div className='welcome-logo-symbol'> 
             <Lottie options={defaultOptions} height={400} width={400}/>
             </div>

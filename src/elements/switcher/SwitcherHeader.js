@@ -26,7 +26,6 @@ const SwitcherHeader = () => {
         const getMode = async () => {
             try {
                 const modeData = JSON.parse(await AsyncStorage.getItem("mode"))
-                // console.log('Theme mode: ' + modeData);
                 if(modeData === null){
                     const colorMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
                     if(colorMode){
@@ -67,7 +66,6 @@ const SwitcherHeader = () => {
             <div onClick={switchColor} className = {`maxsolo-sidebar-menu-item-tab`}>
                 {switchMode === "Dark mode" ? (<><SunIcon/> Light mode</>) : (<><MoonIcon/> Dark mode</>)}
             </div>
-            {/* <div onClick={removeData}>Remove</div> */}
         </>
     )
 }

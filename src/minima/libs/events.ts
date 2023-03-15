@@ -18,6 +18,12 @@ interface NewBlockResponse {
   event: 'NEWBLOCK';
   data: NewBlockData;
 }
+
+interface MDSTimerResponse {
+  event: "MDS_TIMER_10SECONDS";
+  data: Object;
+}
+
 interface NewBlockData {
   txpow: Txpow;
 }
@@ -77,6 +83,10 @@ let whenMinimaLog = (d: MinimaLogData) => {
   // console.log("MINIMA LOG event ... please resgister custom callback", d);
 };
 
+let whenMDSTimer = (d: any) => {
+  // console.log("MINIMA MDS TIMER event ... please register custom callback", d);
+};
+
 ///////////////////////////
 
 const initializeMinima = () => {
@@ -85,13 +95,13 @@ const initializeMinima = () => {
   //  MDS.DEBUG_PORT = 9003;
   //  MDS.DEBUG_MINIDAPPID = '0x48BEB93E352D320C5051F9B008E7C26675949EDBA3EB25507ABE023B2702775D'
 
-  MDS.init((nodeEvent: InitResponse | MiningResponse | NewBlockResponse | MinimaLogResponse | NewBalanceResponse | MaximaResponse ) => {
+  MDS.init((nodeEvent: InitResponse | MiningResponse | NewBlockResponse | MinimaLogResponse | NewBalanceResponse | MaximaResponse | MDSTimerResponse ) => {
   // MDS.init((nodeEvent: InitResponse | MaximaResponse) => {
 
       switch (nodeEvent.event) {
           case 'inited':
               // will have to dispatch from here..
-              whenInit()
+              whenInit();
               break;
           case 'NEWBLOCK':
               const newBlockData = nodeEvent.data
@@ -113,7 +123,12 @@ const initializeMinima = () => {
               const minimaLogeData = nodeEvent.data
               whenMinimaLog(minimaLogeData);
               break;
+          case "MDS_TIMER_10SECONDS":
+              const mdstimerdata = nodeEvent.data;
+              whenMDSTimer(mdstimerdata);
+              break;
           default:
+              // console.log(nodeEvent);
               // console.error("Unknown event type: ", nodeEvent);
       }
   });
@@ -142,12 +157,15 @@ function onNewBalance(callback: (data: NewBalanceData) => void) {
 
 function onInit(callback: () => void) {
   whenInit = callback;
-
   initializeMinima();
 }
 
 function onMinimaLog(callback: (data: MinimaLogData) => void) {
   whenMinimaLog = callback;
+}
+
+function onMDSTimer(callback: (data: any) => void) {
+  whenMDSTimer = callback;
 }
 
 export const events = {
@@ -156,5 +174,6 @@ export const events = {
   onMaxima,
   onNewBalance,
   onInit,
+  onMDSTimer,
   onMinimaLog
 };

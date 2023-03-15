@@ -87,6 +87,18 @@
         }
         &.notactive{
             background-color: #ACCAFF;
+            opacity: 0.4;
+            transition: none;
+            cursor: none;
+            pointer-events: none;
+        }
+        // Send token button, making almost invisible, Barry request.
+        &:disabled{
+            opacity: 0.4;
+            transition: none;
+            cursor: none;
+            pointer-events: none;
+            background-color: #ACCAFF;
         }
     }
     &.btn-fill-red-medium {

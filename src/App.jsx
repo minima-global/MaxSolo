@@ -1,7 +1,7 @@
 import React, { useEffect, useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { events } from "./minima/libs/events";
-import Loader from './elements/loader/Loader';
+import LoaderSpin from './elements/loader/LoaderSpin';
 
 
 // DashBoard Import
@@ -23,7 +23,7 @@ const App = () => {
 
   return (
     <>
-      {isMDSLoading ? <Loader /> : <DashBoard />}
+      {isMDSLoading ? <LoaderSpin /> : <DashBoard />}
     </> 
   )
 }

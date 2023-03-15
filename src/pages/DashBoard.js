@@ -38,7 +38,7 @@ const DashBoard = () => {
     useEffect(()=>{
         setTimeout(function() {
             setShowLogo(false)
-        }, 2300);
+        }, 2100);
     },[])
     
 

@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const ShowVault = ({showVault, onButtonClick}) => {
+const ShowVault = ({ showVault, errorText, onButtonClick, stateChanger, ...rest}) => {
+
+    const [vaultPassword, setVaultPassword] = useState("");
+    const [showHidePassword, changeShowHidePassword] = useState(false);
+    const passShowIcon = !showHidePassword? "icon-on" : "icon-off"
 
     const LockIcon = () =>{
       return(
@@ -10,6 +14,24 @@ const ShowVault = ({showVault, onButtonClick}) => {
       )
     }
 
+    const handleOnClick = (e) => {
+      e.preventDefault();
+      if(vaultPassword == "") return;
+      stateChanger(vaultPassword);
+      setVaultPassword("");
+      setTimeout(() => {
+        stateChanger('');
+        changeShowHidePassword(false);
+      }, 1000); 
+    };
+
+    const onCancel = () =>{
+      stateChanger("");
+      onButtonClick();
+      setVaultPassword("");
+      changeShowHidePassword(false);
+    }
+
     return (
         <div className={`send-tokens-window-vault ${showVault ? "" : "hide"}`}>
           <div className='send-tokens-window-vault-icon'>
@@ -17,18 +39,22 @@ const ShowVault = ({showVault, onButtonClick}) => {
           </div>
           <div className='send-tokens-window-vault-header'>Your node is locked</div>
           <div className='send-tokens-window-vault-copy'>Please enter your password below to complete your transaction.</div>
-          <label>Enter your Password</label>
-          <input type='password'
-                id='password'
-          />
-          {/* <input type={show_input?'text':'password'} 
+          <form>
+            <i
+              className={showHidePassword ? "icon-off" : "icon-on"}
+              onClick={() => changeShowHidePassword(!showHidePassword)}
+            > 
+            </i>
+            <input 
+                type={showHidePassword ? "text" : "password"}
                 name='password' 
-                id='password'
-                value={user.password}
-                onChange={handleChange}
-          /> */}
-          <button onClick={onButtonClick} className="minima-btn btn-fill-blue-medium">Submit</button>
-          <button onClick={onButtonClick} className="minima-btn btn-fill-blue-medium">Cancel</button>
+                value={vaultPassword} 
+                onInput={e => setVaultPassword(e.target.value)}
+            />
+            <div className='info-input'>{errorText}</div>
+            <button onClick={handleOnClick} disabled={vaultPassword === ""} className="minima-btn btn-fill-blue-medium">Submit</button>
+          </form>
+          <button onClick={onCancel} className="minima-btn btn-fill-black-medium">Cancel</button>
         </div>       
     )
 }

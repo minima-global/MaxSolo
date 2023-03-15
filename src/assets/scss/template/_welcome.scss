@@ -113,6 +113,21 @@
     }
 }
 
+.clip-animation { 
+    clip-path: circle(100%);
+    animation: clip 400ms;
+    animation-delay: 1750ms;
+}
+    
+@keyframes clip {
+    from {
+        clip-path: circle(100%);
+    }
+    to {
+        clip-path: circle(0%);
+    }
+}
+
 .welcome-logo{
     background: var(--gradient-minima);
     display: flex;

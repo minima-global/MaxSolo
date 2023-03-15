@@ -1,44 +1,46 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { getTime, tokenName, tokenUrl, linkOutput } from '../../../utils';
 import {Decimal} from 'decimal.js';
 import Resizer from "react-image-file-resizer";
 import Avatar from 'react-avatar';
 import ShowSuccess from "../../../elements/send-token/ShowSuccess";
 import ShowPending from "../../../elements/send-token/ShowPending";
-// import ShowVault from '../../../elements/send-token/ShowVault';
+import ShowVault from '../../../elements/send-token/ShowVault';
 import ScrollBottom from "../../../elements/scroll/ScrollBottom";
 import LightBox from '../../../elements/lightbox/Lightbox';
 import DropDown from '../../../elements/dropdown/DropDown';
 import NotificationSidebar from '../../../elements/notification/NotificationSidebar';
 import UserProfile from '../../../elements/modalbox/UserProfile';
 import TextareaAutosize from 'react-textarea-autosize';
-import { AddImage, TokenIcon, SendIcon, SendActive, PlusIcon } from '../../../elements/icons/MaxSoloIcons';
+import { AddImage, TokenIcon, SendIcon, SendActive, PlusIcon, LockP2P } from '../../../elements/icons/MaxSoloIcons';
 
 const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress, getContactId, getMinimaAddress, publicRoomKey, chatData, sendData, responseName, roomName, lastSeen}) => {
 
-  const [messageData, setMessageData] = useState("");
-  const [baseImage, setBaseImage] = useState("");
+  const [baseImage, setBaseImage] = useState('');
   const [active, setActive] = useState('');
   const [tokenID, setTokenID] = useState('');
+  const [vaultValue, setVaultValue] = useState("");
   const [tokenTitle, setTokenTitle] = useState('Minima');
   const [tokenAmount, setTokenAmount] = useState(0);
   const [tokenSendable, setTokenSendable] = useState(0);
-  const inputToken = useRef(null);
+  const [inputToken, setInputToken] = useState(0);
 
+  const localNotes = localStorage.getItem(roomName);
+  const [messageData, setMessageData] = useState({ room: roomName, copy: localNotes});
   const [showToken, setShowToken] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showSendTokenBut, setShowSendTokenBut] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showPending, setShowPending] = useState(false);
-  // const [showVault, setShowVault] = useState(false);
+  const [showVault, setShowVault] = useState(false);
   const [showUserProfile, setShowUserProfile] = useState(false);
   const [errorText, setErrorText] = useState('');
-  // const [inputText, setInputText] = useState('');
   const [newSize, setNewSize] = useState('68px');
 
   const notifyRef = useRef(null);
   const imageMimeType = /image\/(png|jpg|jpeg|webp)/i;
 
+  Decimal.set({ precision: 60 });
 
   const onButtonClick = () => {   
     // console.log("Send token window");
@@ -48,12 +50,12 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
       setShowPending(false);
     }, 1000);
 
-    // A new functionality, to do
-    //setShowVault(false);
-
+    setShowVault(false);
     setShowMenu(false);
+
     setShowSendTokenBut(false);
-    inputToken.current.value = "";
+    setInputToken("");
+    setErrorText("");
     document.querySelector('body').classList.toggle("overhidden");
   };
 
@@ -63,15 +65,15 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
   };
 
   const onMaxAmountClick = () => {   
-    inputToken.current.value = tokenSendable;
-    if(inputToken.current.value.length <= 12){
-      setNewSize(parseInt(70 - inputToken.current.value.length * 1.98));
-      console.log("0 > 12");
-    }else if(12 <= inputToken.current.value.length &&  inputToken.current.value.length <= 24){
-      setNewSize(parseInt(70 - inputToken.current.value.length * 2.215));      
-      console.log("12 < 21");
+    // inputToken = tokenSendable;
+    setInputToken(tokenSendable);
+    if(inputToken.length <= 12){
+      setNewSize(parseInt(70 - inputToken.length * 1.98));
+      // console.log("0 - 12");
+    }else if(12 <= inputToken.length &&  inputToken.length <= 24){
+      setNewSize(parseInt(70 - inputToken.length * 2.215));      
+      // console.log("12 - 21");
     }  
-    
   };
 
   // Uploading and resizing image
@@ -110,11 +112,11 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
   const tokenHandler = (name, id, sendable) => {
     // console.log(name, id)
     setTokenSendable(sendable);
+    // setTokenSendable(10);
     setActive(name);
     setTokenTitle(name);
     setTokenID(id);
   }
-
 
   const onSetErrorClick = (copy) => {
     console.log("Error copy", copy);
@@ -126,26 +128,39 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
     }, 3000);
   }
 
-  const submitToken = (e) => {
-    // console.log("Submit token", tokenSendable)
+  // Check Vault
+  const checkVault = (e) => {
     e.preventDefault();
 
-    Decimal.set({ precision: 60 });
+    if( inputToken == "" || inputToken <= 0 )return onSetErrorClick("Invalid amount...");
+
+    const tokenamountsend = new Decimal(inputToken);
+    const tokenamountsendable = new Decimal(tokenSendable);
+    if(tokenamountsend.greaterThan(tokenamountsendable))return onSetErrorClick ("Insufficient funds..."); 
+
+    window.MDS.cmd("status",function(result){
+      if(result.response.locked){
+        setShowVault(true);
+      }else{
+        submitToken();
+      }
+    }); 
+  }
+
+  const submitToken = () => {
+    // console.log("Submit token", tokenSendable, inputToken)
+    // e.preventDefault();
 
     const tokenid = tokenID;
-    const tokenamount = inputToken.current.value;
+    const tokenamount = inputToken;
     const tokenname = tokenTitle;
-
-    if( tokenamount == "" || tokenamount <= 0 ){
-      return onSetErrorClick("Invalid amount..."); 
-    }
 
     if(tokenid == ""){
       return onSetErrorClick("Please select token...");
     }
 
     const roundedAmount = new Decimal(tokenamount).toDecimalPlaces(18).toString();
-    const tokenamountsend = new Decimal(inputToken.current.value);
+    const tokenamountsend = new Decimal(inputToken);
     const tokenamountsendable = new Decimal(tokenSendable);
 
     setTokenAmount(tokenamount);
@@ -155,13 +170,19 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
     if(tokenamountsend.greaterThan(tokenamountsendable))return onSetErrorClick ("Insufficient funds..."); 
 
     window.MDS.cmd("maxcontacts action:search publickey:"+publicRoomKey,function(resp){
-		    
-      //Get the contact      
-      const sendfunction = "send tokenid:"+tokenid+" amount:"+tokenamountsend+" address:"+getMinimaAddress;
-      
+      //Get the contact  
+
+      const sendfunction = (vaultValue == "") ? `send tokenid:${tokenid} amount:${tokenamountsend} address:${getMinimaAddress}` : `send password:${vaultValue} tokenid:${tokenid} amount:${tokenamountsend} address:${getMinimaAddress}`;
+
       window.MDS.cmd(sendfunction, function(resp){
         
         console.log("Token", resp);
+
+        // Password correct?
+        if(resp.error === "Incorrect password!"){
+          console.log(resp.error);
+          return onSetErrorClick(resp.error); 
+        }
         
         const tokenSendData = (message) =>{
             var data = {};
@@ -199,31 +220,30 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
     });
   }
 
-  const submitHandle = (e) => {
-    // console.log("Image: " + baseImage)
-    e.preventDefault();
+  // Making data for sending
+  const submitData = () => {
+    localStorage.setItem(roomName, '');
+    setMessageData({copy: ''});
     var data = {};
     data.username = responseName;
-    if(!messageData == "" && !baseImage){
+    if(!messageData.copy == "" && !baseImage){
       data.type = "text";
-      data.message = messageData;
+      data.message = messageData.copy;
       data.filedata = "";
       sendData(data);
-      setMessageData("");
     }
     if(!baseImage == ""){
       data.type = "image";
       data.filedata = baseImage;
       data.message = "";
-      if(!messageData == ""){
-        data.message = messageData;
+      if(!messageData.copy == ""){
+        data.message = messageData.copy;
       }
       sendData(data);
-      setMessageData("");
       setBaseImage("");
     }
   }
-  
+
   const deleteMessages = () =>{  
     console.log("Messages Deleted");
     window.MDS.sql("DELETE from messages WHERE publickey='"+publicRoomKey+"'", function(sqlmsg){      
@@ -236,14 +256,11 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
   }
 
   const deleteContact = () => {
-    console.log("Contact deleted" + getContactId + getCurrentAddress);
     const deletecontact = "maxcontacts action:remove contact:"+getCurrentAddress+" id:"+getContactId+"";
     window.MDS.cmd(deletecontact, function(resp) {
       if (resp.status) {
         deleteMessages();
-        setTimeout(() => {
-          notifyRef.current.notifyMessage("Contact removed.", "info");
-        }, 1000); 
+        notifyRef.current.notifyMessage("Contact removed.", "info");
       }
       else{
         notifyRef.current.notifyMessage("Could not remove contact.", "error");
@@ -251,7 +268,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
     });
   }
 
-  const getMaximaContact = ( ) => {
+  const getMaximaContact = () => {
     window.MDS.cmd("maxcontacts action:search publickey:"+publicRoomKey,function(resp){
       navigator.clipboard.writeText(resp.response.contact.currentaddress);
       notifyRef.current.notifyMessage("Contact copied.", "info");
@@ -262,11 +279,37 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
     setShowUserProfile(!showUserProfile)
   };
 
+  const textareaData = (e) => {
+    setMessageData({copy: e.target.value});
+    localStorage.setItem(roomName, messageData.copy);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    submitData();
+  }
+
+  const enterPress = (e) => {
+    if (e.keyCode == 13 && !e.shiftKey) {
+      e.preventDefault();
+      submitData();
+    }
+  }
+
+  useEffect(()=>{
+    setMessageData({room: roomName, copy: localNotes});
+  },[roomName]);
+
+  useEffect(()=>{
+    if(vaultValue == "")return;
+    submitToken();
+  },[vaultValue]);
+  
+
   return (
     <>  
-          <UserProfile deleteContact={deleteContact} roomName={roomName} lastSeen={lastSeen} deleteMessages={deleteMessages} publicRoomKey={publicRoomKey} showUserProfile={showUserProfile} setShowUserProfile={setShowUserProfile} />
-          
-          <div className="maxsolo-chat-area">
+        <UserProfile deleteContact={deleteContact} roomName={roomName} lastSeen={lastSeen} deleteMessages={deleteMessages} publicRoomKey={publicRoomKey} showUserProfile={showUserProfile} setShowUserProfile={setShowUserProfile} />  
+        <div className="maxsolo-chat-area">
             <div className="maxsolo-chat-area-header">
               <div className="maxsolo-chat-area-title" onClick={handleUserProfileClick}>
                 <Avatar className="maxsolo-chat-area-title-profile" name={roomName} size={54} round={true} maxInitials={2}/>
@@ -286,7 +329,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
                 </div>
                 <div className='send-tokens-window-header'>{active ? 'Amount to send' : 'Select token'}</div>
                 <div className={`send-tokens-window-number ${active ? "" : "hide"}`}>
-                    <input style={{fontSize: newSize+'px'}} className={`${errorText ? 'error' : ''}`} ref={inputToken} onChange={(event) => { 
+                    <input style={{fontSize: newSize+'px'}} className={`${errorText ? 'error' : ''}`} value={inputToken} onInput={e => setInputToken(e.target.value)} onChange={(event) => { 
                         try {
                           const tokenamountsend = new Decimal(event.target.value); 
                           const tokenamountsendable = new Decimal(tokenSendable); 
@@ -316,11 +359,13 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
                     </div>
                   )))}
                 </div>
-                <button onClick={submitToken} disabled={showSendTokenBut} className={`minima-btn btn-fill-blue-medium ${active ? "" : "hide"}`}>Send</button>
-                <button onClick={onButtonClick} className="minima-btn btn-fill-black-medium">Cancel</button>
+                <button onClick={checkVault} disabled={showSendTokenBut} className={`minima-btn btn-fill-blue-medium ${active ? "" : "hide"}`}>Send</button>
+                <button onClick={() => {onButtonClick(); setInputToken("");}} className="minima-btn btn-fill-black-medium">Cancel</button>
 
+                <ShowVault stateChanger={setVaultValue} errorText={errorText} showVault={showVault} onButtonClick={onButtonClick} />
                 <ShowPending showPending={showPending} tokenAmount={tokenAmount} tokenTitle={tokenTitle} onButtonClick={onButtonClick} />
                 <ShowSuccess showSuccess={showSuccess} tokenAmount={tokenAmount} tokenTitle={tokenTitle} onButtonClick={onButtonClick} />
+
             </div>
            
             <div onClick={onMenuClick} className={`chat-area-footer-overlay ${showMenu || showToken ? "show" : ""}`}></div>
@@ -329,16 +374,13 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
 
                 <div className='maxsolo-chat-area-main-notification'>
                   <div>
-                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 24 24">
-                    <path  d="M8.42,6.99v2.15h7.16V6.99c0-1.98-1.6-3.58-3.58-3.58S8.42,5.01,8.42,6.99z M5.56,9.14V6.99 c0-3.56,2.89-6.44,6.44-6.44s6.44,2.89,6.44,6.44v2.15h0.72c1.58,0,2.86,1.28,2.86,2.86v8.59c0,1.58-1.28,2.86-2.86,2.86H4.84 c-1.58,0-2.86-1.28-2.86-2.86V12c0-1.58,1.28-2.86,2.86-2.86H5.56z"/>
-                    </svg>
+                    <LockP2P />
                   </div>
                   <span>Messages to this chat with {roomName} are now secured with end-to-end encryption.</span>
                 </div>
                 <NotificationSidebar ref={notifyRef} />
                 {chatData.map(((item, index)=>(
                     <div key={index}>
-                      {item.MESSAGE === "Chat" ? null : 
                       <div className={`chat-msg ${item.ROOMNAME === item.USERNAME ? "" : "owner"}`}>
                       <div className="chat-msg-profile">
                         <div className="chat-msg-date">
@@ -352,11 +394,10 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
                             <img src={item.FILEDATA} className="img-prev" alt="" />
                           </LightBox> : "" }
                           {item.MESSAGE ?
-                          <span>{item.MESSAGE === "Chat" ? null: linkOutput(decodeURIComponent(item.MESSAGE).replace("%27", "'")) }</span> : "" }
+                          <span>{linkOutput(decodeURIComponent(item.MESSAGE).replace("%27", "'")) }</span> : "" }
                         </div>
                       </div>
                       </div>
-                      }
                     </div>
                   ))
                   )}
@@ -378,7 +419,7 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
                 </div>
 
                 <div className='chat-area-footer'>   
-                  <form data-testid='form-submit' onSubmit={submitHandle}>
+                  <form data-testid='form-submit' onSubmit={handleSubmit} onKeyDown={enterPress}>
                     {baseImage ? <div className='image-preview'><img src={baseImage} height='32px' width='32px' alt='' /></div> : '' }
                     <div onClick={onMenuClick}><PlusIcon /></div>
                     <input id='file-input' type='file' accept='image/*'
@@ -388,9 +429,9 @@ const ChatArea = ({loadMessages, restartContacts, getBalance, getCurrentAddress,
                       style={{display: 'none'}}
                       onClick={e => (e.target.value = null)}
                     />
-                    {roomName ? <TextareaAutosize maxRows={messageData ? '5' : '1'} autoFocus data-testid='input-text' onChange={(e) => {setMessageData(e.target.value);} } placeholder='Write a message' value={messageData} /> : null}
-                    {messageData.trim() || baseImage ? (
-                      <div onClick={submitHandle}><SendActive /></div>
+                    {roomName ? <TextareaAutosize maxRows={messageData.copy ? '5' : '1'} data-testid='input-text' onChange={textareaData} placeholder='Write a message' value={messageData.copy || ''} /> : null}
+                    {messageData.copy?.trim() || baseImage ? (
+                      <button type="submit" className='send-button'><SendActive /></button>
                     ) : (
                       <SendIcon />
                     )}
