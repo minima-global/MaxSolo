@@ -173,13 +173,13 @@ import { UserIcon, ShareIcon, HelpIcon, CheckIcon, BackIcon, CloseIcon, NewChat 
         }  
 
         {/* Maxcontacts without chat */}
-        <div className={`maxsolo-sidebar-overlay ${isChatContacts ? 'open' : ''}`} onClick={() => {setIsChatContacts(false)}}></div>
+        <div className={`maxsolo-sidebar-overlay ${isChatContacts ? 'open' : ''}`} onClick={() => {setIsChatContacts(false); setInputFocus(false);}}></div>
 
         <div className={`contact-list-container ${inputFocus ? 'full' : ''} ${isChatContacts ? '' : 'hide'}`}>
           <div className='contact-list-container-header'>
               <div className='title'>
                 <div>Start a new chat</div>
-                <div className='close' onClick={() => {setIsChatContacts(false)}}><CloseIcon /></div>
+                <div className='close' onClick={() => {setIsChatContacts(false); setInputFocus(false);}}><CloseIcon /></div>
               </div>
               <input
                 placeholder="Search contacts"
@@ -187,7 +187,7 @@ import { UserIcon, ShareIcon, HelpIcon, CheckIcon, BackIcon, CloseIcon, NewChat 
                 onInput={e => setInputContactsSearch(e.target.value)}
                 type="Search"
                 onFocus={() => {setInputFocus(true)}}
-                onBlur={() => {setInputFocus(false)}}
+                // onBlur={() => {setInputFocus(false)}}
               />
           </div>
 
@@ -197,7 +197,7 @@ import { UserIcon, ShareIcon, HelpIcon, CheckIcon, BackIcon, CloseIcon, NewChat 
                   {
                     filtered.length > 0 ?
                     filtered.map(((item, index)=>(
-                        <div key={index} className={`contact`} onClick={() => {SideBarHandler(item.publickey, item.extradata.name); setIsChatContacts(false)}}>
+                        <div key={index} className={`contact`} onClick={() => {SideBarHandler(item.publickey, item.extradata.name); setIsChatContacts(false); setInputFocus(false);}}>
                           <div className="contact-detail">
                             <div className="contact-username">{item.extradata.name}</div>
                           </div>
@@ -211,7 +211,7 @@ import { UserIcon, ShareIcon, HelpIcon, CheckIcon, BackIcon, CloseIcon, NewChat 
               }
           </div>
           <div className="contact-list-container-footer">
-              <button onClick={() => {setIsChatContacts(false)}} className="minima-btn btn-fill-black-medium">Cancel</button>
+              <button onClick={() => {setIsChatContacts(false); setInputFocus(false);}} className="minima-btn btn-fill-black-medium">Cancel</button>
           </div>
         </div>
       </div>
