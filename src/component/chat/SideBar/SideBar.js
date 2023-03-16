@@ -76,7 +76,6 @@ import { UserIcon, ShareIcon, HelpIcon, CheckIcon, BackIcon, CloseIcon, NewChat 
     }, 3000); 
   };
 
-
   const filtered = contacts.filter((item) =>
     item.extradata.name
     .toLowerCase()
@@ -187,7 +186,6 @@ import { UserIcon, ShareIcon, HelpIcon, CheckIcon, BackIcon, CloseIcon, NewChat 
                 onInput={e => setInputContactsSearch(e.target.value)}
                 type="Search"
                 onFocus={() => {setInputFocus(true)}}
-                // onBlur={() => {setInputFocus(false)}}
               />
           </div>
 
