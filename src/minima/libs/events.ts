@@ -68,7 +68,7 @@ let whenMining = (d: MiningData) => {
   // console.log("MINIMG event ... please resgister custom callback", d);
 };
 let whenMaxima = (d: MaximaData) => {
-  console.log("YES MAXIMA event ... please register custom callback", d);
+  // console.log("YES MAXIMA event ... please register custom callback", d);
 };
 // let whenMaxcontacts = (d: MaxcontactsData) => {
 //   console.log("YES MAXIMA event ... please register custom callback", d);
