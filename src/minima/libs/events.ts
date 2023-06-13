@@ -1,12 +1,12 @@
-import { Txpow } from '../types/minima/index';
+import { Txpow } from "../types/minima/index";
 
 ////////////// response interfaces //////////
 interface InitResponse {
-  event: 'inited';
+  event: "inited";
 }
 
 interface MiningResponse {
-  event: 'MINING';
+  event: "MINING";
   data: MiningData;
 }
 interface MiningData {
@@ -15,7 +15,7 @@ interface MiningData {
 }
 
 interface NewBlockResponse {
-  event: 'NEWBLOCK';
+  event: "NEWBLOCK";
   data: NewBlockData;
 }
 
@@ -29,7 +29,7 @@ interface NewBlockData {
 }
 
 interface MinimaLogResponse {
-  event: 'MINIMALOG';
+  event: "MINIMALOG";
   data: MinimaLogData;
 }
 interface MinimaLogData {
@@ -37,7 +37,7 @@ interface MinimaLogData {
 }
 
 interface NewBalanceResponse {
-  event: 'NEWBALANCE';
+  event: "NEWBALANCE";
   data: NewBalanceData;
 }
 interface NewBalanceData {
@@ -45,7 +45,7 @@ interface NewBalanceData {
 }
 
 interface MaximaResponse {
-  event: 'MAXIMA';
+  event: "MAXIMA";
   data: MaximaData;
 }
 
@@ -90,48 +90,59 @@ let whenMDSTimer = (d: any) => {
 ///////////////////////////
 
 const initializeMinima = () => {
+  // MDS.DEBUG_HOST = "127.0.0.1";
+  // MDS.DEBUG_PORT = 9003;
+  // MDS.DEBUG_MINIDAPPID =
+  //   "0xC8BFA4D73BF743E6FFCA93F5E79056C2A90315862A5F1F0B460B50C41FD31B2B02ABFD123B54B8CD12987E408FE547CFE9815E8066FAED7BEE3DD2D65568A33CB3B743928D5EA1D7389595B1630BC7C7D1448864175FA5EDF8AC994FD28FEAED3808EBA2C9E62905022BBDE0068315903AF2150DA2DC0CD8D2538EB7B2EE0480";
 
-  //  MDS.DEBUG_HOST = "127.0.0.1";
-  //  MDS.DEBUG_PORT = 9003;
-  //  MDS.DEBUG_MINIDAPPID = '0x48BEB93E352D320C5051F9B008E7C26675949EDBA3EB25507ABE023B2702775D'
-
-  MDS.init((nodeEvent: InitResponse | MiningResponse | NewBlockResponse | MinimaLogResponse | NewBalanceResponse | MaximaResponse | MDSTimerResponse ) => {
-  // MDS.init((nodeEvent: InitResponse | MaximaResponse) => {
+  MDS.init(
+    (
+      nodeEvent:
+        | InitResponse
+        | MiningResponse
+        | NewBlockResponse
+        | MinimaLogResponse
+        | NewBalanceResponse
+        | MaximaResponse
+        | MDSTimerResponse
+    ) => {
+      // MDS.init((nodeEvent: InitResponse | MaximaResponse) => {
 
       switch (nodeEvent.event) {
-          case 'inited':
-              // will have to dispatch from here..
-              whenInit();
-              break;
-          case 'NEWBLOCK':
-              const newBlockData = nodeEvent.data
-              whenNewBlock(newBlockData);
-              break;
-          case 'MINING':
-              const miningData = nodeEvent.data
-              whenMining(miningData);
-              break;
-          case 'MAXIMA':
-              const maximaData = nodeEvent.data
-              whenMaxima(maximaData);
-              break;
-          case 'NEWBALANCE':
-              const newBalanceData = nodeEvent.data
-              whenNewBalance(newBalanceData);
-              break;
-          case 'MINIMALOG':
-              const minimaLogeData = nodeEvent.data
-              whenMinimaLog(minimaLogeData);
-              break;
-          case "MDS_TIMER_10SECONDS":
-              const mdstimerdata = nodeEvent.data;
-              whenMDSTimer(mdstimerdata);
-              break;
-          default:
-              // console.log(nodeEvent);
-              // console.error("Unknown event type: ", nodeEvent);
+        case "inited":
+          // will have to dispatch from here..
+          whenInit();
+          break;
+        case "NEWBLOCK":
+          const newBlockData = nodeEvent.data;
+          whenNewBlock(newBlockData);
+          break;
+        case "MINING":
+          const miningData = nodeEvent.data;
+          whenMining(miningData);
+          break;
+        case "MAXIMA":
+          const maximaData = nodeEvent.data;
+          whenMaxima(maximaData);
+          break;
+        case "NEWBALANCE":
+          const newBalanceData = nodeEvent.data;
+          whenNewBalance(newBalanceData);
+          break;
+        case "MINIMALOG":
+          const minimaLogeData = nodeEvent.data;
+          whenMinimaLog(minimaLogeData);
+          break;
+        case "MDS_TIMER_10SECONDS":
+          const mdstimerdata = nodeEvent.data;
+          whenMDSTimer(mdstimerdata);
+          break;
+        default:
+        // console.log(nodeEvent);
+        // console.error("Unknown event type: ", nodeEvent);
       }
-  });
+    }
+  );
 };
 
 // Do registration
@@ -175,5 +186,5 @@ export const events = {
   onNewBalance,
   onInit,
   onMDSTimer,
-  onMinimaLog
+  onMinimaLog,
 };

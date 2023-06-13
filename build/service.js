@@ -13,21 +13,19 @@ function hexToUtf8(s)
   );
 }
 
+var serviceTime = 0;
+var appTime = 0;
 
-var isOpened = true;
 //Main message handler..
 MDS.init(function(msg){
 
+	if (msg.event === "MDS_TIMER_10SECONDS"){
+		serviceTime = msg.data.timemilli;
+	}
+
 	if (msg.event === "MDSCOMMS") {
     const parsedPayload = JSON.parse(msg.data.message);
-    if(parsedPayload.target === "service" && !parsedPayload.keepAlive) {
-			isOpened = false;
-			// MDS.notify("MaxSolo is hidden " + isOpened);
-    }else{
-			isOpened = true;
-			// MDS.notify("MaxSolo is visible " + isOpened);
-			// MDS.notifycancel();
-		}
+		appTime = parsedPayload.appTime;
   }
 	
 	//Do initialisation
@@ -82,9 +80,10 @@ MDS.init(function(msg){
 			//Insert into DB
 			MDS.sql(msgsql);
 
-			if(!isOpened){
+			if(serviceTime > (appTime + 300000)){
 				MDS.notify(maxjson.username + '\n' + maxjson.message);
 			}
+
 		}
 	}
 });
