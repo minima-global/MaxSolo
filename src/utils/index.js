@@ -41,11 +41,11 @@ const utf8ToHex = (s) => {
 
 const getTime = (date) => {
   const rawDate = new Date(parseInt(date, 10));
-  const time = rawDate.toLocaleTimeString([], {
+  const dateTime = rawDate.toLocaleString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
-  return time;
+  return dateTime;
 };
 
 const tokenName = (item) => {

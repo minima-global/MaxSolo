@@ -21,6 +21,14 @@ import {
   LockP2P,
 } from "../../../elements/icons/MaxSoloIcons";
 
+import {
+  isSameDay,
+  isYesterday,
+  isSameYear,
+  isSameWeek,
+  format,
+} from "date-fns";
+
 const ChatArea = ({
   loadMessages,
   restartContacts,
@@ -354,6 +362,100 @@ const ChatArea = ({
     submitToken();
   }, [vaultValue]);
 
+  const createMessageElement = () => {
+    const elements = [];
+    let counter = 0;
+
+    for (const key in chatData) {
+      const shouldShowYesterday = chatData[key][0]
+        ? isYesterday(new Date(), new Date(parseInt(chatData[key][0].DATE)))
+        : false;
+
+      const shouldShowToday = chatData[key][0]
+        ? isSameDay(new Date(), new Date(parseInt(chatData[key][0].DATE)))
+        : false;
+
+      // should year be displayed for this item?
+      const shouldDisplayYear = chatData[key][0]
+        ? isSameYear(new Date(), new Date(parseInt(chatData[key][0].DATE)))
+        : false;
+
+      // should we show weekday or month day?
+      const shouldShowWeekDay = chatData[key][0]
+        ? isSameWeek(new Date(), new Date(parseInt(chatData[key][0].DATE)))
+        : false;
+      counter++;
+
+      const displayDate = `
+      ${
+        shouldShowToday
+          ? "Today"
+          : shouldShowYesterday
+          ? "Yesterday"
+          : format(
+              parseInt(chatData[key][0].DATE),
+              `${shouldShowWeekDay ? "EEEE dd" : "MMM dd"} ${
+                !shouldDisplayYear ? " yyyy" : ""
+              }`
+            )
+      }
+      
+      `;
+
+      if (chatData[key]) {
+        elements.push(
+          <React.Fragment key={`msg_${chatData[key].PUBLIC}`}>
+            <div>
+              <div className="chat-date-wrapper">
+                <h3 className="chat-date">{displayDate}</h3>
+              </div>
+
+              {chatData[key].map((_m, index) => (
+                <div key={index}>
+                  <div
+                    className={`chat-msg ${
+                      _m.ROOMNAME === _m.USERNAME ? "" : "owner"
+                    }`}
+                  >
+                    <div className="chat-msg-profile">
+                      <div className="chat-msg-date">{getTime(_m.DATE)}</div>
+                    </div>
+                    <div className="chat-msg-content">
+                      <div className="chat-msg-text">
+                        {_m.FILEDATA ? (
+                          <LightBox src={_m.FILEDATA} alt="MaxSolo">
+                            <img
+                              src={_m.FILEDATA}
+                              className="img-prev"
+                              alt=""
+                            />
+                          </LightBox>
+                        ) : (
+                          ""
+                        )}
+                        {_m.MESSAGE ? (
+                          <span>
+                            {linkOutput(
+                              decodeURIComponent(_m.MESSAGE).replace("%27", "'")
+                            )}
+                          </span>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </React.Fragment>
+        );
+      }
+    }
+
+    return elements;
+  };
+
   return (
     <>
       <UserProfile
@@ -543,7 +645,7 @@ const ChatArea = ({
             </span>
           </div>
           <NotificationSidebar ref={notifyRef} />
-          {chatData.map((item, index) => (
+          {/* {chatData.map((item, index) => (
             <div key={index}>
               <div
                 className={`chat-msg ${
@@ -575,7 +677,8 @@ const ChatArea = ({
                 </div>
               </div>
             </div>
-          ))}
+          ))} */}
+          {createMessageElement()}
 
           <div
             className={`chat-area-footer-menu ${

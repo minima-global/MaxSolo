@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "./static/css/main.e8bfadd2.css",
-    "main.js": "./static/js/main.0038aaf3.js",
+    "main.css": "./static/css/main.0c62981d.css",
+    "main.js": "./static/js/main.67b87bfd.js",
     "static/js/787.af2c6e00.chunk.js": "./static/js/787.af2c6e00.chunk.js",
     "static/media/minima_logo.gif": "./static/media/minima_logo.40998e064596eb70c7af.gif",
     "static/media/maxsolo_select_message.svg": "./static/media/maxsolo_select_message.b18b76e5608b6b3fe0066d3d5cb40a87.svg",
@@ -14,12 +14,12 @@
     "static/media/search_icon_active.svg": "./static/media/search_icon_active.42f124d8d73a5a350ded.svg",
     "index.html": "./index.html",
     "static/media/minima-sign.svg": "./static/media/minima-sign.1c0c72a17fbac4ddddff883d05d25a58.svg",
-    "main.e8bfadd2.css.map": "./static/css/main.e8bfadd2.css.map",
-    "main.0038aaf3.js.map": "./static/js/main.0038aaf3.js.map",
+    "main.0c62981d.css.map": "./static/css/main.0c62981d.css.map",
+    "main.67b87bfd.js.map": "./static/js/main.67b87bfd.js.map",
     "787.af2c6e00.chunk.js.map": "./static/js/787.af2c6e00.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e8bfadd2.css",
-    "static/js/main.0038aaf3.js"
+    "static/css/main.0c62981d.css",
+    "static/js/main.67b87bfd.js"
   ]
 }

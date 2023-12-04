@@ -6,6 +6,8 @@ import SideBar from "./SideBar/SideBar";
 import ChatArea from "./ChatArea/ChatArea";
 import LoaderSpin from "../../elements/loader/LoaderSpin";
 
+import { format } from "date-fns";
+
 const ChatWindow = () => {
   const [isChatLoading, setIsChatLoading] = useState(true);
   const [contacts, setContacts] = useState([]);
@@ -194,9 +196,56 @@ const ChatWindow = () => {
         key +
         "' ORDER BY ID DESC LIMIT 200",
       function (sqlmsg) {
-        // console.log(sqlmsg.status);
         if (sqlmsg.status) {
-          setChatData(sqlmsg.rows.reverse());
+          const messages = sqlmsg.rows;
+
+          /**
+           * {
+            "ID": "1",
+            "ROOMNAME": "eurobuddha",
+            "PUBLICKEY": "0x30819F300D06092A864886F70D010101050003818D0030818902818100BEA9651581EFD72C3150983F4D4FB21786475406B62896A00FA278D8254645D7359BCD3AEEC30B035E162BAF3DD0C7F2269F53989917151F8B8A769559BA8692BB85D2C077C762147FD8F1405A7145C903CE7505E01E149D6D68ACEF7C445C14558810FF1103BE060DE37DDE66817BFAB12C016FD711E17641E0CB0ECEA363B90203010001",
+            "USERNAME": "Elias",
+            "TYPE": "text",
+            "MESSAGE": "Hello",
+            "FILEDATA": "",
+            "CUSTOMID": "0x00",
+            "STATE": "",
+            "READ": "1",
+            "DATE": "1701685320919"
+            }
+           */
+          let dataByDate: {
+            [key: string]: {
+              ID: string,
+              ROOMNAME: string,
+              PUBLICKEY: string,
+              USERNAME: string,
+              TYPE: string,
+              MESSAGE: string,
+              FILEDATA: string,
+              CUSTOMID: string,
+              STATE: string,
+              READ: string,
+              DATE: string,
+            },
+          } = {};
+
+          messages.reverse().map((message) => {
+            const date = format(parseInt(message.DATE), "MMMM do yyyy");
+
+            if (dataByDate[date]) {
+              // then add message
+              return dataByDate[date].push(message);
+            }
+            // otherwise add as first message
+            const firstMessage = [message];
+            dataByDate = {
+              ...dataByDate,
+              [date]: firstMessage,
+            };
+          });
+
+          setChatData(dataByDate);
         }
       }
     );
