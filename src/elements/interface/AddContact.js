@@ -49,7 +49,7 @@ const AddContact = ({ isSelectedTab, setIsOpen, setSelectedTab }) => {
         <BackIcon /> Add contact
       </div>
       <div className="maxsolo-sidebar-container-content">
-        <div className="main-title">Enter your contact’s Minima address</div>
+        <div className="main-title">Enter your contact’s Maxima address</div>
         <form onSubmit={addContact}>
           <textarea
             onChange={(e) => {

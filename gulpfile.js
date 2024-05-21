@@ -12,7 +12,7 @@ function zipApp(cb) {
     const name = app.name;
 
     gulp.src('build/**')
-        .pipe(zip(`${name}_${formattedDate}.mds.zip`))
+        .pipe(zip(`${name}-${app.version}.mds.zip`))
         .pipe(gulp.dest('minidapp'));
 
     cb();

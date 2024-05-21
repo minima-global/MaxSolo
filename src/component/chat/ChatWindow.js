@@ -163,7 +163,7 @@ const ChatWindow = () => {
     callback
   ) {
     //Url encode the message
-    let encoded = encodeURIComponent(message).replace("'", "%27");
+    let encoded = encodeURIComponent(message).replaceAll("'", "%27");
 
     var fullsql =
       "INSERT INTO messages (roomname, publickey, username, type, message, filedata, date) VALUES " +
