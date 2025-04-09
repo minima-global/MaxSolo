@@ -49,6 +49,9 @@ MDS.init(function(msg){
 		//Run this..
 		MDS.sql(initsql,function(msg){
 			MDS.log("MaxSolo Service SQL Inited..");
+
+			//Modify messages table if message varchar is 512 to 1024
+			MDS.sql("ALTER TABLE messages MODIFY COLUMN message varchar(1024)");
 		});
 	
 	//Only interested in Maxima

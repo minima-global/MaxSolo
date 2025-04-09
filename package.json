@@ -53,7 +53,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp ./CHANGELOG.md ./build/CHANGELOG.md",
     "eject": "react-scripts eject",
     "zip": "gulp",
     "test": "react-scripts test --testPathIgnorePatterns=.*e2e.test.js",
