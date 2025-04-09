@@ -25,3 +25,5 @@ yarn-error.log*
 .netlify
 
 .env
+
+/minidapp/*.mds.zip
