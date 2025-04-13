@@ -16,6 +16,9 @@ const App = () => {
     events.onInit(() => {
       // console.log(`minima onInit`);
       setIsMDSLoading(false);
+
+      //Modify messages table if message varchar is 512 to 1024
+      window.MDS.sql("ALTER TABLE messages MODIFY COLUMN message varchar(2048)");
     });
   }, []);
 

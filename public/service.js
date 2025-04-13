@@ -38,7 +38,7 @@ MDS.init(function(msg){
 					+"  `publickey` varchar(512) NOT NULL, "
 					+"  `username` varchar(160) NOT NULL, "
 					+"  `type` varchar(64) NOT NULL, "
-					+"  `message` varchar(512) NOT NULL, "
+					+"  `message` varchar(2048) NOT NULL, "
 					+"  `filedata` clob(256K) NOT NULL, "
 					+"  `customid` varchar(128) NOT NULL DEFAULT '0x00', "
 					+"  `state` varchar(128) NOT NULL DEFAULT '', "
@@ -51,7 +51,7 @@ MDS.init(function(msg){
 			MDS.log("MaxSolo Service SQL Inited..");
 
 			//Modify messages table if message varchar is 512 to 1024
-			MDS.sql("ALTER TABLE messages MODIFY COLUMN message varchar(1024)");
+			MDS.sql("ALTER TABLE messages MODIFY COLUMN message varchar(2048)");
 		});
 	
 	//Only interested in Maxima
