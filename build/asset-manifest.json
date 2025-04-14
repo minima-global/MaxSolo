@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "./static/css/main.e5ee8716.css",
-    "main.js": "./static/js/main.ea0d6b88.js",
+    "main.js": "./static/js/main.6caff030.js",
     "static/js/787.a38f208b.chunk.js": "./static/js/787.a38f208b.chunk.js",
     "static/media/minima_logo.gif": "./static/media/minima_logo.40998e064596eb70c7af.gif",
     "static/media/maxsolo_select_message.svg": "./static/media/maxsolo_select_message.b18b76e5608b6b3fe0066d3d5cb40a87.svg",
@@ -15,11 +15,11 @@
     "index.html": "./index.html",
     "static/media/minima-sign.svg": "./static/media/minima-sign.1c0c72a17fbac4ddddff883d05d25a58.svg",
     "main.e5ee8716.css.map": "./static/css/main.e5ee8716.css.map",
-    "main.ea0d6b88.js.map": "./static/js/main.ea0d6b88.js.map",
+    "main.6caff030.js.map": "./static/js/main.6caff030.js.map",
     "787.a38f208b.chunk.js.map": "./static/js/787.a38f208b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e5ee8716.css",
-    "static/js/main.ea0d6b88.js"
+    "static/js/main.6caff030.js"
   ]
 }

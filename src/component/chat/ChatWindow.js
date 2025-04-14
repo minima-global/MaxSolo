@@ -76,7 +76,7 @@ const ChatWindow = () => {
       // And create the actual JSON
       var maxjson = JSON.parse(jsonstr);
       // URL encode the message and deal with apostrophe..
-      let decoded = decodeURIComponent(maxjson.message).replace("%27", "'");
+      let decoded = decodeURIComponent(maxjson.message).replace(/%27/g, "'");
 
       showNotification(maxjson.username, decoded);
     }
